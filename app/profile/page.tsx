@@ -22,24 +22,29 @@ export default async function ProfilePage() {
   return (
     <main className="mx-auto w-full max-w-2xl space-y-6 px-4 py-10">
       <header>
-        <h1 className="text-3xl font-bold tracking-tight">Your profile</h1>
-        <p className="mt-1 text-sm text-muted">Signed in as {user.email}</p>
+        <p className="eyebrow">Account</p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight">Your profile</h1>
+        <p className="mt-1 text-sm break-words text-muted">
+          Signed in with Google as {user.email}
+        </p>
       </header>
 
       {error && (
-        <p className="alert alert-error">Could not load profile: {error.message}</p>
+        <p role="alert" className="alert alert-error">
+          We couldn’t load your profile: {error.message}
+        </p>
       )}
       {!error && !profile && (
-        <p className="alert alert-error">
-          No profile row is visible for your account. Make sure the profiles
-          SELECT policy from <code>supabase/policies.sql</code> has been applied.
+        <p role="alert" className="alert alert-error">
+          We couldn’t find a profile for your account, so changes may not save.
+          Try signing out and back in.
         </p>
       )}
 
       {!isProfileComplete(profile) && (
         <p className="alert alert-warning">
-          <strong>Welcome!</strong> Please add your first and last name to
-          complete your profile.
+          <strong>Welcome!</strong> Add your first and last name below to finish
+          setting up your profile.
         </p>
       )}
 

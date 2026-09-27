@@ -4,6 +4,9 @@ import { useState, type ChangeEvent, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Avatar from '@/components/Avatar'
+import Feedback, { type FeedbackMessage } from '@/components/Feedback'
+import Spinner from '@/components/Spinner'
+import { ImageIcon } from '@/components/icons'
 
 const AVATAR_BUCKET = 'avatars'
 const MAX_AVATAR_BYTES = 2 * 1024 * 1024 // 2 MB, matches the bucket limit
@@ -22,28 +25,14 @@ type Props = {
   initialAvatarUrl: string | null
 }
 
-type Message = { type: 'success' | 'error'; text: string }
-
 function describeStorageError(message: string) {
   if (/bucket not found/i.test(message)) {
-    return 'The "avatars" storage bucket does not exist. Create it in Supabase (Storage → New bucket → "avatars", Public).'
+    return 'Photo storage isn’t set up yet (the "avatars" bucket is missing).'
   }
   if (/row-level security|unauthorized|403/i.test(message)) {
-    return 'Upload was blocked by Storage policies. Apply the storage policies in supabase/policies.sql.'
+    return 'You don’t have permission to upload here. Try signing out and back in.'
   }
   return message
-}
-
-function StatusMessage({ message }: { message: Message | null }) {
-  if (!message) return null
-  return (
-    <p
-      role={message.type === 'error' ? 'alert' : 'status'}
-      className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-error'}`}
-    >
-      {message.text}
-    </p>
-  )
 }
 
 export default function ProfileForm({
@@ -57,35 +46,50 @@ export default function ProfileForm({
 
   const [firstName, setFirstName] = useState(initialFirstName)
   const [lastName, setLastName] = useState(initialLastName)
+  const [savedNames, setSavedNames] = useState({
+    first: initialFirstName.trim(),
+    last: initialLastName.trim(),
+  })
   const [savingNames, setSavingNames] = useState(false)
-  const [namesMessage, setNamesMessage] = useState<Message | null>(null)
+  const [namesMessage, setNamesMessage] = useState<FeedbackMessage | null>(null)
 
   const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl)
   const [file, setFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
-  const [avatarMessage, setAvatarMessage] = useState<Message | null>(null)
+  const [avatarMessage, setAvatarMessage] = useState<FeedbackMessage | null>(null)
 
-  function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
-    const chosen = event.target.files?.[0] ?? null
-    setAvatarMessage(null)
+  const namesChanged =
+    firstName.trim() !== savedNames.first || lastName.trim() !== savedNames.last
+
+  function clearSelectedFile() {
     if (previewUrl) URL.revokeObjectURL(previewUrl)
     setPreviewUrl(null)
     setFile(null)
+  }
+
+  function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
+    const chosen = event.target.files?.[0] ?? null
+    // Reset so choosing the same file again still fires onChange.
+    event.target.value = ''
+    setAvatarMessage(null)
+    clearSelectedFile()
 
     if (!chosen) return
 
     if (!IMAGE_EXTENSIONS[chosen.type]) {
       setAvatarMessage({
         type: 'error',
-        text: 'Please choose a JPG, PNG, WebP, or GIF image.',
+        text: 'That file type isn’t supported. Please choose a JPG, PNG, WebP, or GIF image.',
       })
-      event.target.value = ''
       return
     }
     if (chosen.size > MAX_AVATAR_BYTES) {
-      setAvatarMessage({ type: 'error', text: 'Image must be 2 MB or smaller.' })
-      event.target.value = ''
+      const sizeMb = (chosen.size / (1024 * 1024)).toFixed(1)
+      setAvatarMessage({
+        type: 'error',
+        text: `That image is ${sizeMb} MB. Please choose one that’s 2 MB or smaller.`,
+      })
       return
     }
 
@@ -94,7 +98,7 @@ export default function ProfileForm({
   }
 
   async function handleUpload() {
-    if (!file) return
+    if (!file || uploading) return
     setUploading(true)
     setAvatarMessage(null)
 
@@ -109,7 +113,7 @@ export default function ProfileForm({
     if (uploadError) {
       setAvatarMessage({
         type: 'error',
-        text: `Photo upload failed: ${describeStorageError(uploadError.message)}`,
+        text: `Photo upload failed. ${describeStorageError(uploadError.message)}`,
       })
       setUploading(false)
       return
@@ -137,16 +141,14 @@ export default function ProfileForm({
     if (updateError || !updated?.length) {
       setAvatarMessage({
         type: 'error',
-        text: `Photo uploaded, but saving it to your profile failed: ${
-          updateError?.message ?? 'no profile row was updated (check profiles RLS policies).'
+        text: `Your photo uploaded, but we couldn’t save it to your profile. ${
+          updateError?.message ?? 'Please try again.'
         }`,
       })
     } else {
       setAvatarUrl(newAvatarUrl)
-      if (previewUrl) URL.revokeObjectURL(previewUrl)
-      setPreviewUrl(null)
-      setFile(null)
-      setAvatarMessage({ type: 'success', text: 'Profile photo updated!' })
+      clearSelectedFile()
+      setAvatarMessage({ type: 'success', text: 'Profile photo updated.' })
       router.refresh()
     }
 
@@ -155,27 +157,33 @@ export default function ProfileForm({
 
   async function handleSaveNames(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (savingNames || !namesChanged) return
     setSavingNames(true)
     setNamesMessage(null)
 
+    const first = firstName.trim()
+    const last = lastName.trim()
     const supabase = createClient()
     const { data: updated, error } = await supabase
       .from('profiles')
       .update({
-        first_name: firstName.trim() || null,
-        last_name: lastName.trim() || null,
+        first_name: first || null,
+        last_name: last || null,
       })
       .eq('id', userId)
       .select('id')
 
     if (error) {
-      setNamesMessage({ type: 'error', text: `Save failed: ${error.message}` })
+      setNamesMessage({ type: 'error', text: `We couldn’t save your name. ${error.message}` })
     } else if (!updated?.length) {
       setNamesMessage({
         type: 'error',
-        text: 'Save failed: no profile row was updated. Check that the profiles RLS policies are applied.',
+        text: 'We couldn’t save your name because your profile wasn’t found. Try signing out and back in.',
       })
     } else {
+      setSavedNames({ first, last })
+      setFirstName(first)
+      setLastName(last)
       setNamesMessage({ type: 'success', text: 'Your name has been saved.' })
       // Re-render server components (nav banner, dashboard greeting).
       router.refresh()
@@ -188,78 +196,127 @@ export default function ProfileForm({
 
   return (
     <div className="space-y-6">
-      <section className="card space-y-4">
-        <div>
-          <h2 className="text-lg font-semibold">Profile photo</h2>
-          <p className="text-sm text-muted">JPG, PNG, WebP, or GIF up to 2 MB.</p>
-        </div>
+      <section aria-labelledby="photo-heading" className="card">
+        <h2 id="photo-heading" className="text-lg font-semibold">
+          Profile photo
+        </h2>
+        <p id="photo-rules" className="mt-1 text-sm text-muted">
+          JPG, PNG, WebP, or GIF · up to 2 MB
+        </p>
 
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-          <Avatar url={previewUrl ?? avatarUrl} name={displayName} size="lg" />
-          <div className="flex flex-wrap items-center gap-2">
-            <label className="btn btn-secondary cursor-pointer">
-              {avatarUrl ? 'Choose new photo' : 'Choose photo'}
-              <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/gif"
-                onChange={handleFileChange}
-                className="sr-only"
-              />
-            </label>
-            {file && (
-              <button
-                type="button"
-                onClick={handleUpload}
-                disabled={uploading}
-                className="btn btn-primary"
-              >
-                {uploading ? 'Uploading…' : 'Upload photo'}
-              </button>
+        <div className="mt-5 flex flex-col items-start gap-5 sm:flex-row sm:items-center">
+          <div className="relative">
+            <Avatar url={previewUrl ?? avatarUrl} name={displayName} size="lg" />
+            {previewUrl && (
+              <span className="absolute -right-1 -bottom-1 rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold text-accent-foreground">
+                Preview
+              </span>
+            )}
+          </div>
+
+          <div className="min-w-0 space-y-3">
+            {file ? (
+              <>
+                <p className="text-sm break-all">
+                  <span className="text-muted">Selected:</span> {file.name}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={handleUpload}
+                    disabled={uploading}
+                    aria-busy={uploading}
+                    className="btn btn-primary"
+                  >
+                    {uploading && <Spinner />}
+                    {uploading ? 'Uploading…' : 'Upload photo'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={clearSelectedFile}
+                    disabled={uploading}
+                    className="btn btn-ghost"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </>
+            ) : (
+              <label className="btn btn-secondary cursor-pointer focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent">
+                <ImageIcon />
+                {avatarUrl ? 'Change photo' : 'Choose a photo'}
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  aria-describedby="photo-rules"
+                  onChange={handleFileChange}
+                  className="sr-only"
+                />
+              </label>
             )}
           </div>
         </div>
-        {file && !uploading && (
-          <p className="text-sm text-muted">
-            Selected: {file.name}. Click “Upload photo” to save it.
-          </p>
-        )}
-        <StatusMessage message={avatarMessage} />
+
+        <Feedback message={avatarMessage} className="mt-4" />
       </section>
 
-      <form onSubmit={handleSaveNames} className="card space-y-4">
-        <h2 className="text-lg font-semibold">Your name</h2>
+      <form onSubmit={handleSaveNames} aria-labelledby="name-heading" className="card" noValidate>
+        <h2 id="name-heading" className="text-lg font-semibold">
+          Your name
+        </h2>
+        <p className="mt-1 text-sm text-muted">Used to greet you around the app.</p>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <label className="block">
-            <span className="label">First name</span>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          <div>
+            <label htmlFor="first-name" className="label">
+              First name
+            </label>
             <input
+              id="first-name"
               type="text"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               autoComplete="given-name"
-              placeholder="Ada"
+              maxLength={100}
               className="input"
             />
-          </label>
-          <label className="block">
-            <span className="label">Last name</span>
+          </div>
+          <div>
+            <label htmlFor="last-name" className="label">
+              Last name
+            </label>
             <input
+              id="last-name"
               type="text"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               autoComplete="family-name"
-              placeholder="Lovelace"
+              maxLength={100}
               className="input"
             />
-          </label>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <button type="submit" disabled={savingNames} className="btn btn-primary">
+        <div className="mt-5 flex flex-wrap items-center gap-3">
+          <button
+            type="submit"
+            disabled={savingNames || !namesChanged}
+            aria-busy={savingNames}
+            className="btn btn-primary"
+          >
+            {savingNames && <Spinner />}
             {savingNames ? 'Saving…' : 'Save name'}
           </button>
+          {!namesChanged && !savingNames && (
+            <span className="text-sm text-muted">
+              {savedNames.first || savedNames.last
+                ? 'No unsaved changes'
+                : 'Type your name above to save it'}
+            </span>
+          )}
         </div>
-        <StatusMessage message={namesMessage} />
+
+        <Feedback message={namesMessage} className="mt-4" />
       </form>
     </div>
   )

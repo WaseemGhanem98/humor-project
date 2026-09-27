@@ -1,11 +1,12 @@
 type Props = {
   url: string | null
   name: string
-  size?: 'sm' | 'lg'
+  size?: 'sm' | 'md' | 'lg'
 }
 
 const SIZES = {
   sm: 'h-8 w-8 text-xs',
+  md: 'h-14 w-14 text-lg',
   lg: 'h-24 w-24 text-2xl',
 }
 

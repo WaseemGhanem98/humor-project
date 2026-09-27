@@ -9,22 +9,27 @@ export default async function JokesList() {
 
   if (error) {
     return (
-      <p className="alert alert-error">Error loading jokes: {error.message}</p>
+      <p role="alert" className="alert alert-error">
+        We couldn’t load the jokes right now. Please try again in a moment.
+      </p>
     )
   }
 
   if (!jokes?.length) {
-    return <p className="card text-center text-muted">No jokes yet.</p>
+    return <p className="card text-center text-muted">No jokes yet. Check back soon!</p>
   }
 
   return (
     <ul className="grid gap-4 sm:grid-cols-2">
-      {jokes.map((joke, index) => (
-        <li key={joke.id} className="card flex gap-4">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/15 text-sm font-semibold text-accent">
-            {index + 1}
+      {jokes.map((joke) => (
+        <li key={joke.id} className="card relative overflow-hidden">
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -top-3 right-4 font-serif text-8xl leading-none text-accent/10 select-none"
+          >
+            ”
           </span>
-          <p className="leading-relaxed">{joke.text}</p>
+          <p className="relative text-lg leading-relaxed">{joke.text}</p>
         </li>
       ))}
     </ul>
