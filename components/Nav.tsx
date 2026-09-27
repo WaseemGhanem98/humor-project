@@ -28,6 +28,12 @@ export default async function Nav() {
         </Link>
 
         <div className="ml-auto flex items-center gap-1 text-sm sm:gap-2">
+          <Link
+            href="/captions"
+            className="rounded-lg px-3 py-2 font-medium text-muted hover:bg-foreground/5 hover:text-foreground"
+          >
+            Rate Captions
+          </Link>
           {user ? (
             <>
               <Link
