@@ -1,29 +1,13 @@
-import { supabase } from '@/lib/supabase'
+import JokesList from '@/components/JokesList'
 
-export default async function Home() {
-  const { data: jokes, error } = await supabase
-    .from('jokes')
-    .select('id, text')
-    .order('id', { ascending: true })
-
-  if (error) {
-    return (
-      <main>
-        <h1>Error</h1>
-        <p>{error.message}</p>
-      </main>
-    )
-  }
-
+export default function Home() {
   return (
-    <main>
-      <h1>Jokes</h1>
-
-      <ul>
-        {jokes?.map((joke) => (
-          <li key={joke.id}>{joke.text}</li>
-        ))}
-      </ul>
+    <main className="mx-auto w-full max-w-4xl px-4 py-10">
+      <header className="mb-8">
+        <h1 className="text-3xl font-bold tracking-tight">Jokes</h1>
+        <p className="mt-1 text-muted">Fresh from the Supabase jokes table.</p>
+      </header>
+      <JokesList />
     </main>
   )
 }
