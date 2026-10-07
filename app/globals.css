@@ -56,6 +56,14 @@ body {
     @apply rounded-2xl border border-border bg-surface p-6 shadow-sm;
   }
 
+  .meme-card {
+    @apply transition-shadow duration-200 hover:shadow-lg hover:shadow-foreground/5;
+  }
+
+  .skeleton {
+    @apply animate-pulse rounded-md bg-foreground/[0.07] motion-reduce:animate-none;
+  }
+
   .card-interactive {
     @apply transition hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-md motion-reduce:transform-none;
   }
@@ -65,7 +73,12 @@ body {
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium whitespace-nowrap transition duration-150 select-none enabled:active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transform-none;
+  }
+
+  /* Larger, pill-shaped tap targets for voting (44px tall). */
+  .btn-vote {
+    @apply min-h-11 rounded-full px-5 font-semibold;
   }
 
   .btn-lg {

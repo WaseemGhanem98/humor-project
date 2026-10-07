@@ -12,7 +12,7 @@ export function NavLinks({ signedIn, className = '' }: { signedIn: boolean; clas
   const pathname = usePathname()
   const links = [
     { href: '/', label: 'Home' },
-    { href: '/captions', label: 'Rate captions' },
+    { href: '/captions', label: 'Rate memes' },
     ...(signedIn ? [{ href: '/dashboard', label: 'Dashboard' }] : []),
   ]
 

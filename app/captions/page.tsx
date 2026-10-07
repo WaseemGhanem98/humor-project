@@ -1,7 +1,9 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { fetchMemes } from '@/lib/memes'
 import CaptionCard from '@/components/CaptionCard'
-import { ArrowRightIcon } from '@/components/icons'
+import FeedHeader from '@/components/FeedHeader'
+import { ArrowRightIcon, ImageIcon, ThumbDownIcon, ThumbUpIcon } from '@/components/icons'
 
 export default async function CaptionsPage() {
   const supabase = await createClient()
@@ -9,32 +11,26 @@ export default async function CaptionsPage() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { data: captions, error } = await supabase
-    .from('captions')
-    .select('id, text')
-    .order('id', { ascending: true })
+  const { memes, error } = await fetchMemes(supabase)
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-10">
-      <header>
-        <p className="eyebrow">Caption rating</p>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Rate captions</h1>
-        <p className="mt-2 text-muted text-pretty">
-          Thumbs up if it made you smile, thumbs down if it didn’t.
-          {captions?.length ? ` ${captions.length} ${captions.length === 1 ? 'caption' : 'captions'} to go.` : ''}
-        </p>
-      </header>
+    <main className="mx-auto w-full max-w-xl px-4 py-10 sm:py-12">
+      <FeedHeader count={memes?.length ?? 0} />
 
       {user ? (
-        <p className="alert alert-info mt-6">
-          You’re signed in. Each click saves a new vote, so you can rate as you go.
+        <p className="mt-6 flex items-center gap-2 text-sm text-muted">
+          <span className="flex gap-1" aria-hidden>
+            <ThumbUpIcon className="h-4 w-4 text-green-600 dark:text-green-400" />
+            <ThumbDownIcon className="h-4 w-4 text-red-600 dark:text-red-400" />
+          </span>
+          Each click saves a new vote, so rate as you scroll.
         </p>
       ) : (
-        <div className="card mt-6 flex flex-col gap-4 border-accent/30 bg-accent/5 sm:flex-row sm:items-center">
+        <div className="card mt-6 flex flex-col gap-4 border-accent/30 bg-accent/5 p-5 sm:flex-row sm:items-center">
           <div className="flex-1">
             <h2 className="font-semibold">You’re browsing as a guest</h2>
             <p className="mt-1 text-sm text-muted">
-              Feel free to read the captions. Sign in with Google to vote on them.
+              Scroll through the memes freely. Sign in with Google to vote on them.
             </p>
           </div>
           <Link href="/login" className="btn btn-primary self-start sm:self-auto">
@@ -45,19 +41,40 @@ export default async function CaptionsPage() {
 
       <div className="mt-8">
         {error ? (
-          <p role="alert" className="alert alert-error">
-            We couldn’t load captions right now. Please refresh to try again.
-          </p>
-        ) : !captions?.length ? (
-          <p className="card text-center text-muted">No captions to rate yet. Check back soon!</p>
+          <div role="alert" className="card flex flex-col items-center px-6 py-12 text-center">
+            <p className="text-lg font-semibold">We couldn’t load the memes</p>
+            <p className="mt-1 max-w-sm text-sm text-muted">
+              Something went wrong reaching the database. Please refresh to try again.
+            </p>
+            <Link href="/captions" className="btn btn-secondary mt-5">
+              Try again
+            </Link>
+          </div>
+        ) : !memes?.length ? (
+          <div className="card flex flex-col items-center px-6 py-14 text-center">
+            <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/10 text-accent">
+              <ImageIcon className="h-7 w-7" />
+            </span>
+            <p className="mt-4 text-lg font-semibold">No memes yet</p>
+            <p className="mt-1 max-w-sm text-sm text-muted">
+              Nothing to rate right now. Check back soon, or warm up with the jokes on the homepage.
+            </p>
+            <Link href="/" className="btn btn-secondary mt-5">
+              Read the jokes
+            </Link>
+          </div>
         ) : (
-          <ul className="space-y-4">
-            {captions.map((caption) => (
-              <CaptionCard key={caption.id} caption={caption} signedIn={!!user} />
+          <ul className="space-y-8">
+            {memes.map((meme, index) => (
+              <CaptionCard key={meme.id} meme={meme} signedIn={!!user} priority={index === 0} />
             ))}
           </ul>
         )}
       </div>
+
+      {!!memes?.length && (
+        <p className="mt-10 text-center text-sm text-muted">You’ve reached the end. Nice scrolling.</p>
+      )}
     </main>
   )
 }
