@@ -14,6 +14,7 @@ export async function fetchMyVotes(supabase: SupabaseClient, userId: string) {
     .select('caption_id, vote, created_at')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
+    .order('id', { ascending: false })
 
   const latest = new Map<number, MyVote>()
   for (const row of data ?? []) {

@@ -112,7 +112,7 @@ export default async function Home() {
       </section>
 
       <section className="mx-auto max-w-5xl px-4 pb-16">
-        <div className="flex flex-col items-start gap-6 rounded-[2rem] bg-foreground px-6 py-12 text-background sm:flex-row sm:items-center sm:justify-between sm:px-10">
+        <div className="flex flex-col items-start gap-6 rounded-[2rem] bg-[#121211] px-6 py-12 text-[#f3f1eb] dark:border dark:border-border sm:flex-row sm:items-center sm:justify-between sm:px-10">
           <p className="display max-w-md text-3xl leading-tight sm:text-4xl">Your sense of humor, on the record.</p>
           <Link href="/feed" className="btn btn-zest btn-lg">
             Start scrolling <ArrowRightIcon />

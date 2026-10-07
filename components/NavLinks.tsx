@@ -14,7 +14,6 @@ export function DesktopLinks({ signedIn }: { signedIn: boolean }) {
   const links = [
     ...(signedIn ? [] : [{ href: '/', label: 'Home' }]),
     { href: '/feed', label: 'Feed' },
-    ...(signedIn ? [{ href: '/profile', label: 'You' }] : []),
   ]
 
   return (

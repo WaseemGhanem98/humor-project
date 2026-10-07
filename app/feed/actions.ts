@@ -1,5 +1,6 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 
 export type VoteValue = 1 | -1
@@ -31,7 +32,7 @@ export async function submitVote(
 
   if (error) {
     if (error.code === '23505') {
-      return { ok: false, message: 'You have already voted on this caption.' }
+      return { ok: false, message: 'You’ve already voted on this one.' }
     }
     if (error.code === '42501') {
       return {
@@ -40,13 +41,17 @@ export async function submitVote(
       }
     }
     if (error.code === '23503') {
-      return { ok: false, message: 'That caption no longer exists.' }
+      return { ok: false, message: 'That meme no longer exists.' }
     }
     return { ok: false, message: `Could not save your vote: ${error.message}` }
   }
 
+  // Drop cached copies of pages that show your votes (e.g. the feed when you hit Back).
+  revalidatePath('/feed')
+  revalidatePath('/profile')
+
   return {
     ok: true,
-    message: vote === 1 ? 'Upvote recorded!' : 'Downvote recorded!',
+    message: vote === 1 ? 'Saved: funny.' : 'Saved: not funny.',
   }
 }

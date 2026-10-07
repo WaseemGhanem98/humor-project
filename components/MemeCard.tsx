@@ -32,7 +32,8 @@ export default function MemeCard({ meme, signedIn, currentVote, onVoted, priorit
   const headingId = `meme-${meme.id}`
 
   function vote(value: VoteValue) {
-    if (inFlight.current) return
+    // Re-tapping your current verdict would only append an identical vote row.
+    if (inFlight.current || value === currentVote) return
     inFlight.current = true
     setPendingVote(value)
     setStatus(null)
@@ -41,7 +42,7 @@ export default function MemeCard({ meme, signedIn, currentVote, onVoted, priorit
         const res = await submitVote(meme.id, value)
         if (res.ok) {
           onVoted(meme.id, value)
-          setStatus({ ok: true, message: value === 1 ? 'Saved: funny.' : 'Saved: not funny.' })
+          setStatus({ ok: true, message: res.message })
         } else {
           setStatus({ ok: false, message: res.message })
         }
@@ -109,8 +110,6 @@ export default function MemeCard({ meme, signedIn, currentVote, onVoted, priorit
                 {status.ok ? <CheckIcon className="mt-0.5 h-4 w-4 shrink-0" /> : <AlertIcon className="mt-0.5 h-4 w-4 shrink-0" />}
                 {status.message}
               </span>
-            ) : currentVote ? (
-              <span className="text-muted">You can change your verdict anytime.</span>
             ) : null}
           </div>
         )}

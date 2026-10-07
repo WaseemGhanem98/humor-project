@@ -24,7 +24,7 @@ export default async function ProfilePage() {
     redirect('/login')
   }
 
-  const [{ data: profile, error }, { memes }, { votes }] = await Promise.all([
+  const [{ data: profile, error }, { memes }, { votes, error: votesError }] = await Promise.all([
     supabase
       .from('profiles')
       .select('id, first_name, last_name, avatar_url, created_at')
@@ -86,7 +86,11 @@ export default async function ProfilePage() {
           )}
         </div>
 
-        {history.length === 0 ? (
+        {votesError ? (
+          <p role="alert" className="alert alert-error mt-4">
+            We couldn’t load your takes right now. Refresh to try again.
+          </p>
+        ) : history.length === 0 ? (
           <div className="mt-4 rounded-3xl border border-dashed border-border px-6 py-10 text-center">
             <p className="display text-xl">No verdicts yet</p>
             <p className="mt-1 text-sm text-muted">Your funny / not funny calls will show up here.</p>

@@ -49,20 +49,21 @@ export default async function Nav() {
           </div>
         </nav>
 
-        {user && !isProfileComplete(profile) && (
-          <div className="border-t border-border/70 bg-zest/90 text-zest-ink">
-            <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-2 text-sm">
-              <p className="font-medium">Add your name to finish setting up.</p>
-              <Link
-                href="/profile#account"
-                className="inline-flex items-center gap-1 rounded font-semibold underline underline-offset-2"
-              >
-                Finish profile <ArrowRightIcon className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-          </div>
-        )}
       </header>
+
+      {user && !isProfileComplete(profile) && (
+        <div className="bg-zest text-zest-ink">
+          <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-2 text-sm">
+            <p className="font-medium">Add your name to finish setting up.</p>
+            <Link
+              href="/profile#account"
+              className="inline-flex items-center gap-1 rounded font-semibold underline underline-offset-2"
+            >
+              Finish profile <ArrowRightIcon className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        </div>
+      )}
 
       <TabBar signedIn={signedIn} />
     </>
