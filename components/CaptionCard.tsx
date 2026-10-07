@@ -126,10 +126,10 @@ export default function CaptionCard({ meme, signedIn, priority = false }: Props)
               href={meme.imageSourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 rounded underline-offset-2 hover:text-foreground hover:underline"
+              className="rounded underline-offset-2 hover:text-foreground hover:underline"
             >
               {meme.imageCredit}
-              <ExternalLinkIcon className="h-3 w-3" />
+              <ExternalLinkIcon className="ml-1 inline-block h-3 w-3 align-[-0.125em]" />
               <span className="sr-only">(opens in a new tab)</span>
             </a>
           ) : (
