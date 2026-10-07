@@ -28,7 +28,7 @@ export default function Avatar({ url, name, size = 'sm' }: Props) {
   return (
     <div
       aria-hidden
-      className={`${SIZES[size]} flex shrink-0 items-center justify-center rounded-full bg-accent/15 font-semibold text-accent`}
+      className={`${SIZES[size]} flex shrink-0 items-center justify-center rounded-full bg-zest font-semibold text-zest-ink`}
     >
       {initial}
     </div>

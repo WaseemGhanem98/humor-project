@@ -29,6 +29,6 @@ export async function GET(request: Request) {
     .eq('id', data.user.id)
     .maybeSingle()
 
-  const next = isProfileComplete(profile) ? '/dashboard' : '/profile'
+  const next = isProfileComplete(profile) ? '/feed' : '/profile'
   return NextResponse.redirect(`${origin}${next}`)
 }

@@ -1,40 +1,57 @@
 @import "tailwindcss";
 
+/*
+ * Wry design tokens.
+ * Warm paper + ink, with one signature color ("zest" lime) reserved for brand
+ * moments and the "Funny" verdict. Primary actions are ink, not color.
+ */
 :root {
-  --background: #f7f7f9;
-  --foreground: #18181b;
+  --background: #f5f3ee;
+  --foreground: #121211;
   --surface: #ffffff;
-  --border: #e4e4e7;
-  --muted: #5f5f69;
-  --accent: #4f46e5;
-  --accent-hover: #4338ca;
+  --surface-2: #ece9e2;
+  --border: #e2ded5;
+  --muted: #67635b;
+  --accent: #121211;
+  --accent-hover: #2d2c29;
   --accent-foreground: #ffffff;
+  --zest: #d4f53c;
+  --zest-ink: #121211;
+  --focus: #121211;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0d0d0c;
+    --foreground: #f3f1eb;
+    --surface: #171716;
+    --surface-2: #21201e;
+    --border: #2c2b28;
+    --muted: #a19c92;
+    --accent: #d4f53c;
+    --accent-hover: #e2fa75;
+    --accent-foreground: #121211;
+    --zest: #d4f53c;
+    --zest-ink: #121211;
+    --focus: #d4f53c;
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
   --color-border: var(--border);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-foreground: var(--accent-foreground);
+  --color-zest: var(--zest);
+  --color-zest-ink: var(--zest-ink);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0b0b0d;
-    --foreground: #ededed;
-    --surface: #151518;
-    --border: #2a2a30;
-    --muted: #a1a1aa;
-    --accent: #818cf8;
-    --accent-hover: #a5b4fc;
-    --accent-foreground: #0b0b0d;
-  }
+  --font-display: var(--font-bricolage);
 }
 
 body {
@@ -46,59 +63,81 @@ body {
 @layer base {
   /* Visible keyboard focus everywhere; mouse clicks don't show the ring. */
   :focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--focus);
     outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--zest);
+    color: var(--zest-ink);
   }
 }
 
 @layer components {
+  .display {
+    @apply font-display font-extrabold tracking-[-0.03em];
+  }
+
   .card {
-    @apply rounded-2xl border border-border bg-surface p-6 shadow-sm;
+    @apply rounded-3xl border border-border bg-surface p-6;
+  }
+
+  .card-interactive {
+    @apply transition hover:-translate-y-0.5 hover:shadow-md motion-reduce:transform-none;
   }
 
   .meme-card {
-    @apply transition-shadow duration-200 hover:shadow-lg hover:shadow-foreground/5;
+    @apply shadow-[0_1px_2px_rgb(0_0_0/0.04)] transition-shadow duration-200 hover:shadow-[0_8px_30px_rgb(0_0_0/0.07)];
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold tracking-[0.12em] text-muted uppercase;
+  }
+
+  /* Highlighter-pen emphasis for one word in a headline. */
+  .mark {
+    @apply rounded-[0.2em] bg-zest px-[0.12em] text-zest-ink [box-decoration-break:clone];
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-1 text-xs font-medium;
   }
 
   .skeleton {
     @apply animate-pulse rounded-md bg-foreground/[0.07] motion-reduce:animate-none;
   }
 
-  .card-interactive {
-    @apply transition hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-md motion-reduce:transform-none;
-  }
-
-  .eyebrow {
-    @apply text-xs font-semibold tracking-wider text-accent uppercase;
-  }
-
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium whitespace-nowrap transition duration-150 select-none enabled:active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transform-none;
-  }
-
-  /* Larger, pill-shaped tap targets for voting (44px tall). */
-  .btn-vote {
-    @apply min-h-11 rounded-full px-5 font-semibold;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold whitespace-nowrap transition duration-150 select-none enabled:active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-45 motion-reduce:transform-none;
   }
 
   .btn-lg {
-    @apply px-5 py-2.5 text-base;
+    @apply min-h-12 px-6 text-base;
   }
 
   .btn-primary {
-    @apply bg-accent text-accent-foreground shadow-sm hover:bg-accent-hover;
+    @apply bg-accent text-accent-foreground hover:bg-accent-hover;
   }
 
   .btn-secondary {
-    @apply border border-border bg-surface hover:bg-foreground/5;
+    @apply border border-border bg-surface hover:border-foreground/25 hover:bg-surface-2;
   }
 
   .btn-ghost {
     @apply text-muted hover:bg-foreground/5 hover:text-foreground;
   }
 
+  .btn-zest {
+    @apply bg-zest text-zest-ink hover:brightness-95;
+  }
+
+  /* Verdict buttons on each meme: big, equal-width tap targets. */
+  .btn-vote {
+    @apply min-h-12 flex-1 rounded-2xl border border-border bg-surface text-[0.95rem];
+  }
+
   .input {
-    @apply w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25;
+    @apply w-full rounded-xl border border-border bg-surface px-3.5 py-2.5 text-sm outline-none transition focus:border-foreground/40 focus:ring-4 focus:ring-foreground/5;
   }
 
   .label {
@@ -110,7 +149,7 @@ body {
   }
 
   .alert {
-    @apply rounded-lg border px-4 py-3 text-sm;
+    @apply rounded-2xl border px-4 py-3 text-sm;
   }
 
   .alert-error {
@@ -126,6 +165,6 @@ body {
   }
 
   .alert-info {
-    @apply border-accent/30 bg-accent/5 text-foreground;
+    @apply border-border bg-surface-2 text-foreground;
   }
 }

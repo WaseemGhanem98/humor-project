@@ -185,7 +185,7 @@ export default function ProfileForm({
       setFirstName(first)
       setLastName(last)
       setNamesMessage({ type: 'success', text: 'Your name has been saved.' })
-      // Re-render server components (nav banner, dashboard greeting).
+      // Re-render server components (nav banner, profile header).
       router.refresh()
     }
 

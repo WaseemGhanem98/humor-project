@@ -112,3 +112,54 @@ export function ImageIcon(props: IconProps) {
     </Icon>
   )
 }
+
+export function LaughIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M7.5 13.5h9a4.5 4.5 0 0 1-9 0Z" />
+      <path d="M8 9.5h.01" />
+      <path d="M16 9.5h.01" />
+    </Icon>
+  )
+}
+
+export function MehIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M8.5 15.5h7" />
+      <path d="M8 9.5h.01" />
+      <path d="M16 9.5h.01" />
+    </Icon>
+  )
+}
+
+export function HomeIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M3 10.5 12 3l9 7.5" />
+      <path d="M5 9v11a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9" />
+    </Icon>
+  )
+}
+
+export function FeedIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <rect x="4" y="3" width="16" height="12" rx="2.5" />
+      <path d="M7 19h10" />
+      <path d="M9 22h6" />
+    </Icon>
+  )
+}
+
+export function LogInIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+      <path d="m10 17 5-5-5-5" />
+      <path d="M15 12H3" />
+    </Icon>
+  )
+}

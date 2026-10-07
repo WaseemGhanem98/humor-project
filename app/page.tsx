@@ -1,91 +1,131 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { fetchMemes } from '@/lib/memes'
 import JokesList from '@/components/JokesList'
-import { ArrowRightIcon, ThumbDownIcon, ThumbUpIcon } from '@/components/icons'
+import Logo from '@/components/Logo'
+import { ArrowRightIcon, LaughIcon, MehIcon } from '@/components/icons'
+
+const STEPS = [
+  { title: 'Scroll', body: 'A feed of memes, one at a time.' },
+  { title: 'Call it', body: 'Funny or not funny. One tap.' },
+  { title: 'Keep score', body: 'Every verdict is saved to your profile.' },
+]
 
 export default async function Home() {
   const supabase = await createClient()
-  const [
-    {
-      data: { user },
-    },
-    { count: captionCount },
-  ] = await Promise.all([
-    supabase.auth.getUser(),
-    supabase.from('captions').select('id', { count: 'exact', head: true }),
-  ])
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  // Signed-in people came for the feed, not the pitch.
+  if (user) {
+    redirect('/feed')
+  }
+
+  const { memes } = await fetchMemes(supabase)
+  const withImages = (memes ?? []).filter((m) => m.imageUrl)
+  const [front, ...rest] = withImages
+  const back = rest.slice(0, 2)
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-10 sm:py-14">
-      <section className="grid items-center gap-8 lg:grid-cols-[1.2fr_1fr]">
+    <main className="flex-1">
+      <section className="mx-auto grid max-w-5xl items-center gap-12 px-4 pt-10 pb-16 sm:pt-16 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:pt-20">
         <div>
-          <p className="eyebrow">The Humor Project</p>
-          <h1 className="mt-3 text-4xl font-bold tracking-tight text-balance sm:text-5xl">
-            Help figure out what’s actually funny.
+          <h1 className="display text-5xl leading-[0.95] text-balance sm:text-6xl lg:text-7xl">
+            What’s actually <span className="mark">funny?</span>
           </h1>
-          <p className="mt-4 max-w-xl text-lg text-muted text-pretty">
-            Warm up with a few jokes, then rate captions with a quick thumbs up or
-            thumbs down. Your votes help show which ones really land.
+          <p className="mt-6 max-w-md text-lg text-muted text-pretty">
+            Scroll a feed of memes and give each one a verdict. Two buttons. No essays.
           </p>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <Link href="/captions" className="btn btn-primary btn-lg">
-              Rate captions <ArrowRightIcon />
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/feed" className="btn btn-primary btn-lg">
+              Open the feed <ArrowRightIcon />
             </Link>
-            {user ? (
-              <Link href="/dashboard" className="btn btn-secondary btn-lg">
-                Go to your dashboard
-              </Link>
-            ) : (
-              <Link href="/login" className="btn btn-secondary btn-lg">
-                Sign in with Google
-              </Link>
-            )}
+            <Link href="/login" className="btn btn-secondary btn-lg">
+              Sign in
+            </Link>
           </div>
+          <p className="mt-4 text-sm text-muted">Free. Browse without an account; sign in with Google to vote.</p>
         </div>
 
-        <div className="card space-y-5">
-          <h2 className="font-semibold">What you can do here</h2>
-          <ol className="space-y-4">
-            <li className="flex gap-3">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/10 text-sm font-bold text-accent">
-                1
-              </span>
-              <div>
-                <p className="font-medium">Browse jokes</p>
-                <p className="text-sm text-muted">No account needed. Scroll down to read them.</p>
+        {front && (
+          <div className="relative mx-auto w-full max-w-sm lg:max-w-md">
+            {back.map((meme, i) => (
+              <div
+                key={meme.id}
+                aria-hidden
+                className={`absolute inset-x-8 top-10 overflow-hidden rounded-3xl border border-border bg-surface shadow-sm ${
+                  i === 0 ? '-translate-x-8 -rotate-[8deg] sm:-translate-x-12' : 'translate-x-8 rotate-[7deg] sm:translate-x-12'
+                }`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={meme.imageUrl!} alt="" className="aspect-[4/3] w-full object-cover opacity-90" />
               </div>
-            </li>
-            <li className="flex gap-3">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/10 text-sm font-bold text-accent">
-                2
-              </span>
-              <div>
-                <p className="flex flex-wrap items-center gap-1.5 font-medium">
-                  Rate captions
-                  <ThumbUpIcon className="h-4 w-4 text-green-600 dark:text-green-400" />
-                  <ThumbDownIcon className="h-4 w-4 text-red-600 dark:text-red-400" />
-                </p>
-                <p className="text-sm text-muted">
-                  {captionCount
-                    ? `${captionCount} ${captionCount === 1 ? 'caption is' : 'captions are'} ready for your vote.`
-                    : 'Vote on captions you find funny (or not).'}{' '}
-                  {user ? 'You’re signed in and ready to go.' : 'Sign in with Google to vote.'}
-                </p>
+            ))}
+            <Link
+              href="/feed"
+              aria-label={`Open the feed, starting with: ${front.text}`}
+              className="relative block overflow-hidden rounded-3xl border border-border bg-surface shadow-[0_20px_60px_-15px_rgb(0_0_0/0.25)] transition-transform duration-300 hover:-translate-y-1 motion-reduce:transform-none"
+            >
+              <p className="px-5 pt-5 pb-4 font-display text-xl leading-tight font-bold tracking-[-0.02em]">{front.text}</p>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={front.imageUrl!} alt={front.imageAlt ?? ''} className="aspect-[4/3] w-full object-cover" />
+              <div aria-hidden className="flex gap-2 p-4">
+                <span className="btn btn-vote border-zest bg-zest text-zest-ink">
+                  <LaughIcon className="h-5 w-5" /> Funny
+                </span>
+                <span className="btn btn-vote">
+                  <MehIcon className="h-5 w-5" /> Not funny
+                </span>
               </div>
-            </li>
+            </Link>
+          </div>
+        )}
+      </section>
+
+      <section aria-labelledby="how-heading" className="border-y border-border bg-surface">
+        <div className="mx-auto max-w-5xl px-4 py-14">
+          <h2 id="how-heading" className="eyebrow">
+            How it works
+          </h2>
+          <ol className="mt-6 grid gap-8 sm:grid-cols-3">
+            {STEPS.map((step, i) => (
+              <li key={step.title}>
+                <span className="font-mono text-sm text-muted">0{i + 1}</span>
+                <p className="display mt-1 text-2xl">{step.title}</p>
+                <p className="mt-1 text-muted">{step.body}</p>
+              </li>
+            ))}
           </ol>
         </div>
       </section>
 
-      <section aria-labelledby="jokes-heading" className="mt-16">
-        <div className="mb-5">
-          <h2 id="jokes-heading" className="text-2xl font-bold tracking-tight">
-            Jokes to warm up with
+      <section aria-labelledby="jokes-heading" className="mx-auto max-w-5xl px-4 py-14">
+        <div className="mb-6 flex items-end justify-between gap-4">
+          <h2 id="jokes-heading" className="display text-3xl">
+            One-liners
           </h2>
-          <p className="mt-1 text-muted">A few quick ones before you start rating.</p>
+          <p className="text-sm text-muted">No vote needed.</p>
         </div>
         <JokesList />
       </section>
+
+      <section className="mx-auto max-w-5xl px-4 pb-16">
+        <div className="flex flex-col items-start gap-6 rounded-[2rem] bg-foreground px-6 py-12 text-background sm:flex-row sm:items-center sm:justify-between sm:px-10">
+          <p className="display max-w-md text-3xl leading-tight sm:text-4xl">Your sense of humor, on the record.</p>
+          <Link href="/feed" className="btn btn-zest btn-lg">
+            Start scrolling <ArrowRightIcon />
+          </Link>
+        </div>
+      </section>
+
+      <footer className="border-t border-border">
+        <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+          <Logo />
+          <p>Meme images via Wikimedia Commons, credited on each post.</p>
+        </div>
+      </footer>
     </main>
   )
 }

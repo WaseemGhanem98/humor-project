@@ -7,11 +7,11 @@ export default function SignOutButton({ compact = false }: { compact?: boolean }
     <form action={signOut}>
       <button
         type="submit"
-        aria-label={compact ? 'Log out' : undefined}
+        aria-label={compact ? 'Sign out' : undefined}
         className="btn btn-ghost px-3"
       >
         <LogOutIcon />
-        <span className={compact ? 'hidden sm:inline' : undefined}>Log out</span>
+        <span className={compact ? 'hidden sm:inline' : undefined}>Sign out</span>
       </button>
     </form>
   )
