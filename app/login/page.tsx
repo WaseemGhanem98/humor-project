@@ -25,7 +25,7 @@ export default async function LoginPage({
   const tiles = (memes ?? []).filter((m) => m.imageUrl).slice(0, 4)
 
   return (
-    <main className="mx-auto grid w-full max-w-5xl flex-1 gap-8 px-4 py-10 sm:py-16 lg:grid-cols-2 lg:items-center">
+    <main id="main" className="mx-auto grid w-full max-w-5xl flex-1 gap-8 px-4 py-10 sm:py-16 lg:grid-cols-2 lg:items-center">
       <section
         aria-hidden
         className="hidden overflow-hidden rounded-[2rem] bg-foreground p-8 text-background lg:block"
@@ -51,14 +51,15 @@ export default async function LoginPage({
       <div className="mx-auto w-full max-w-sm">
         <LogoMark className="h-12 w-12" />
         <h1 className="display mt-6 text-4xl">Sign in to play</h1>
-        <p className="mt-2 text-muted">Vote on AI memes, prompt your own, and keep track of your takes.</p>
+        <p className="mt-2 text-muted">Judge AI memes, make your own, keep score.</p>
 
         {typeof error === 'string' && (
           <div role="alert" className="alert alert-error mt-6 flex items-start gap-2">
             <AlertIcon className="mt-0.5 h-4 w-4 shrink-0" />
+            {/* The raw reason stays out of the UI: the query string is user-controllable. */}
             <div>
               <p className="font-semibold">Sign-in didn’t work</p>
-              <p className="mt-0.5 break-words">{error}</p>
+              <p className="mt-0.5">Give it another try. If it keeps happening, try a different Google account.</p>
             </div>
           </div>
         )}

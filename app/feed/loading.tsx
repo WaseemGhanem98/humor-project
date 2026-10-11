@@ -1,7 +1,7 @@
 // Shown while the server fetches memes; mirrors the real card layout to avoid layout shift.
 export default function Loading() {
   return (
-    <main className="mx-auto w-full max-w-xl px-4 pt-8 pb-12 sm:pt-12" aria-busy="true">
+    <main id="main" className="mx-auto w-full max-w-xl px-4 pt-8 pb-12 sm:pt-12" aria-busy="true">
       <h1 className="display mb-3 text-4xl sm:text-5xl">
         Funny, <span className="mark">or not?</span>
       </h1>

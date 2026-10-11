@@ -42,7 +42,12 @@ export async function updateSession(request: NextRequest) {
     (path) => pathname === path || pathname.startsWith(`${path}/`)
   )
 
-  if (!user && isProtected) {
+  // Only page loads get bounced to /login. Server actions (POSTs) still run and re-check the
+  // session themselves, so an expired session gets a clear "sign in again" message instead
+  // of a redirect the client can't use.
+  const isPageLoad = request.method === 'GET' || request.method === 'HEAD'
+
+  if (!user && isProtected && isPageLoad) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     url.search = ''

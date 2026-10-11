@@ -2,14 +2,14 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { fetchMemes } from '@/lib/memes'
-import JokesList from '@/components/JokesList'
+import { MemeSource } from '@/components/MemeCard'
 import Logo from '@/components/Logo'
 import { ArrowRightIcon, LaughIcon, MehIcon } from '@/components/icons'
 
 const STEPS = [
-  { title: 'Prompt it', body: 'Give the AI a topic. It writes the caption and picks the photo.' },
-  { title: 'Call it', body: 'Funny or not funny. One tap, on every AI meme in the feed.' },
-  { title: 'Keep score', body: 'Your verdicts and stats live on your profile.' },
+  { title: 'Prompt it', body: 'Give the AI a topic. It writes the joke and picks the photo.' },
+  { title: 'Judge it', body: 'Funny or Not funny. One tap, every meme.' },
+  { title: 'Keep score', body: 'Your takes and your hit rate, on your profile.' },
 ]
 
 export default async function Home() {
@@ -29,14 +29,14 @@ export default async function Home() {
   const back = rest.slice(0, 2)
 
   return (
-    <main className="flex-1">
+    <main id="main" className="flex-1">
       <section className="mx-auto grid max-w-5xl items-center gap-12 px-4 pt-10 pb-16 sm:pt-16 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:pt-20">
         <div>
           <h1 className="display text-5xl leading-[0.95] text-balance sm:text-6xl lg:text-7xl">
             What’s actually <span className="mark">funny?</span>
           </h1>
           <p className="mt-6 max-w-md text-lg text-muted text-pretty">
-            AI writes the memes. You decide if they actually land. Two buttons. No essays.
+            AI writes the memes. You decide if they land. Two buttons, no essays.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/feed" className="btn btn-primary btn-lg">
@@ -46,7 +46,7 @@ export default async function Home() {
               Sign in
             </Link>
           </div>
-          <p className="mt-4 text-sm text-muted">Free. Browse without an account; sign in with Google to vote and make your own.</p>
+          <p className="mt-4 text-sm text-muted">Free. Browse without an account. Sign in with Google to judge and make your own.</p>
         </div>
 
         {front && (
@@ -68,7 +68,10 @@ export default async function Home() {
               aria-label={`Open the feed, starting with: ${front.text}`}
               className="relative block overflow-hidden rounded-3xl border border-border bg-surface shadow-[0_20px_60px_-15px_rgb(0_0_0/0.25)] transition-transform duration-300 hover:-translate-y-1 motion-reduce:transform-none"
             >
-              <p className="px-5 pt-5 pb-4 font-display text-xl leading-tight font-bold tracking-[-0.02em]">{front.text}</p>
+              <div className="px-5 pt-4">
+                <MemeSource meme={front} />
+              </div>
+              <p className="px-5 pt-2.5 pb-4 font-display text-xl leading-tight font-bold tracking-[-0.02em]">{front.text}</p>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={front.imageUrl!} alt={front.imageAlt ?? ''} className="aspect-[4/3] w-full object-cover" />
               <div aria-hidden className="flex gap-2 p-4">
@@ -101,21 +104,11 @@ export default async function Home() {
         </div>
       </section>
 
-      <section aria-labelledby="jokes-heading" className="mx-auto max-w-5xl px-4 py-14">
-        <div className="mb-6 flex items-end justify-between gap-4">
-          <h2 id="jokes-heading" className="display text-3xl">
-            One-liners
-          </h2>
-          <p className="text-sm text-muted">No vote needed.</p>
-        </div>
-        <JokesList />
-      </section>
-
       <section className="mx-auto max-w-5xl px-4 pb-16">
         <div className="flex flex-col items-start gap-6 rounded-[2rem] bg-[#121211] px-6 py-12 text-[#f3f1eb] dark:border dark:border-border sm:flex-row sm:items-center sm:justify-between sm:px-10">
           <p className="display max-w-md text-3xl leading-tight sm:text-4xl">Your sense of humor, on the record.</p>
           <Link href="/feed" className="btn btn-zest btn-lg">
-            Start scrolling <ArrowRightIcon />
+            Open the feed <ArrowRightIcon />
           </Link>
         </div>
       </section>
@@ -123,7 +116,7 @@ export default async function Home() {
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
           <Logo />
-          <p>AI-written memes are labelled. Images via Wikimedia Commons, credited on each post.</p>
+          <p>AI-written memes are labelled. Photos via Wikimedia Commons, credited on every post.</p>
         </div>
       </footer>
     </main>

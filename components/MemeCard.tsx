@@ -6,7 +6,7 @@ import { submitVote, type VoteValue } from '@/app/feed/actions'
 import type { Meme } from '@/lib/memes'
 import MemeImage from '@/components/MemeImage'
 import Spinner from '@/components/Spinner'
-import { AlertIcon, CheckIcon, ExternalLinkIcon, LaughIcon, MehIcon, SparkleIcon } from '@/components/icons'
+import { AlertIcon, ExternalLinkIcon, LaughIcon, MehIcon, SparkleIcon } from '@/components/icons'
 
 type Props = {
   meme: Meme
@@ -14,6 +14,7 @@ type Props = {
   currentVote: VoteValue | null
   onVoted: (captionId: number, vote: VoteValue) => void
   priority?: boolean
+  className?: string
 }
 
 const VERDICTS: { value: VoteValue; label: string; Icon: typeof LaughIcon; selected: string }[] = [
@@ -21,9 +22,29 @@ const VERDICTS: { value: VoteValue; label: string; Icon: typeof LaughIcon; selec
   { value: -1, label: 'Not funny', Icon: MehIcon, selected: 'border-foreground bg-foreground text-background' },
 ]
 
-export default function MemeCard({ meme, signedIn, currentVote, onVoted, priority = false }: Props) {
+export function MemeSource({ meme }: { meme: Meme }) {
+  return meme.isAi ? (
+    <p className="flex min-w-0 items-center gap-2 text-xs text-muted">
+      <span className="chip shrink-0 border-transparent bg-zest py-0.5 font-semibold text-zest-ink">
+        <SparkleIcon className="h-3.5 w-3.5" /> AI-written
+      </span>
+      {meme.prompt && (
+        <span className="truncate">
+          <span className="sr-only">Topic: </span>on “{meme.prompt}”
+        </span>
+      )}
+    </p>
+  ) : (
+    <p className="text-xs">
+      <span className="chip py-0.5 font-semibold text-muted">Original</span>
+    </p>
+  )
+}
+
+export default function MemeCard({ meme, signedIn, currentVote, onVoted, priority = false, className = '' }: Props) {
   const [, startTransition] = useTransition()
   const [pendingVote, setPendingVote] = useState<VoteValue | null>(null)
+  const [justVoted, setJustVoted] = useState(false)
   const [status, setStatus] = useState<{ ok: boolean; message: string } | null>(null)
   // Guards against double clicks that land before React re-renders the disabled state.
   const inFlight = useRef(false)
@@ -37,17 +58,17 @@ export default function MemeCard({ meme, signedIn, currentVote, onVoted, priorit
     inFlight.current = true
     setPendingVote(value)
     setStatus(null)
+    setJustVoted(false)
     startTransition(async () => {
       try {
         const res = await submitVote(meme.id, value)
         if (res.ok) {
           onVoted(meme.id, value)
-          setStatus({ ok: true, message: res.message })
-        } else {
-          setStatus({ ok: false, message: res.message })
+          setJustVoted(true)
         }
+        setStatus(res)
       } catch {
-        setStatus({ ok: false, message: 'Something went wrong. Check your connection and try again.' })
+        setStatus({ ok: false, message: 'Couldn’t save that. Check your connection and try again.' })
       } finally {
         inFlight.current = false
         setPendingVote(null)
@@ -56,30 +77,21 @@ export default function MemeCard({ meme, signedIn, currentVote, onVoted, priorit
   }
 
   return (
-    <li className="card meme-card overflow-hidden p-0" aria-labelledby={headingId}>
+    <li className={`card meme-card overflow-hidden p-0 ${className}`} aria-labelledby={headingId}>
       <figure>
-        {meme.isAi && (
-          <p className="flex min-w-0 items-center gap-1.5 px-5 pt-4 text-xs font-medium text-muted sm:px-6">
-            <span className="chip shrink-0 border-zest bg-zest py-0.5 font-semibold text-zest-ink">
-              <SparkleIcon className="h-3.5 w-3.5" /> AI-written
-            </span>
-            {meme.prompt && (
-              <span className="truncate">
-                <span className="sr-only">Topic: </span>“{meme.prompt}”
-              </span>
-            )}
-          </p>
-        )}
+        <div className="px-5 pt-4 sm:px-6">
+          <MemeSource meme={meme} />
+        </div>
         <figcaption
           id={headingId}
-          className={`px-5 pb-4 font-display ${meme.isAi ? 'pt-2.5' : 'pt-5'} text-[1.375rem] leading-[1.2] font-bold tracking-[-0.02em] text-pretty sm:px-6 sm:text-2xl`}
+          className="px-5 pt-2.5 pb-4 font-display text-[1.375rem] leading-[1.2] font-bold tracking-[-0.02em] text-pretty sm:px-6 sm:text-2xl"
         >
           {meme.text}
         </figcaption>
         <MemeImage src={meme.imageUrl} alt={meme.imageAlt} caption={meme.text} priority={priority} />
       </figure>
 
-      <div className={`px-4 pt-4 sm:px-5 ${signedIn ? 'pb-3' : 'pb-4'}`}>
+      <div className="p-3 sm:p-4">
         <div role="group" aria-label="Your verdict" className="flex gap-2">
           {VERDICTS.map(({ value, label, Icon, selected }) => {
             const isPending = pendingVote === value
@@ -98,7 +110,9 @@ export default function MemeCard({ meme, signedIn, currentVote, onVoted, priorit
                 disabled={saving}
                 aria-pressed={isSelected}
                 aria-busy={isPending}
-                className={`btn btn-vote ${isSelected ? selected : 'hover:border-foreground/30 hover:bg-surface-2'}`}
+                className={`btn btn-vote ${
+                  isSelected ? `${selected} ${justVoted ? 'animate-pop' : ''}` : 'hover:border-foreground/30 hover:bg-surface-2'
+                }`}
               >
                 {content}
               </button>
@@ -110,26 +124,23 @@ export default function MemeCard({ meme, signedIn, currentVote, onVoted, priorit
           })}
         </div>
 
-        {signedIn && (
-          <div aria-live="polite" className="mt-2.5 min-h-5 px-1 text-[0.8rem]">
-            {saving ? (
-              <span className="text-muted">Saving…</span>
-            ) : status ? (
-              <span
-                role={status.ok ? 'status' : 'alert'}
-                className={`inline-flex items-start gap-1.5 ${status.ok ? 'text-foreground' : 'text-red-700 dark:text-red-400'}`}
-              >
-                {status.ok ? <CheckIcon className="mt-0.5 h-4 w-4 shrink-0" /> : <AlertIcon className="mt-0.5 h-4 w-4 shrink-0" />}
+        {/* Success is visible on the buttons themselves; it's only announced for screen readers. */}
+        <div aria-live="polite">
+          {status &&
+            (status.ok ? (
+              <span className="sr-only">{status.message}</span>
+            ) : (
+              <p role="alert" className="mt-2.5 flex items-start gap-1.5 px-1 text-[0.8rem] text-red-700 dark:text-red-400">
+                <AlertIcon className="mt-0.5 h-4 w-4 shrink-0" />
                 {status.message}
-              </span>
-            ) : null}
-          </div>
-        )}
+              </p>
+            ))}
+        </div>
       </div>
 
       {meme.imageCredit && (
-        <p className="border-t border-border px-5 py-2.5 text-xs text-muted sm:px-6">
-          Image:{' '}
+        <p className="border-t border-border px-5 py-2.5 text-[0.7rem] leading-relaxed text-muted sm:px-6">
+          Photo:{' '}
           {meme.imageSourceUrl ? (
             <a
               href={meme.imageSourceUrl}

@@ -32,7 +32,9 @@ function describeStorageError(message: string) {
   if (/row-level security|unauthorized|403/i.test(message)) {
     return 'You don’t have permission to upload here. Try signing out and back in.'
   }
-  return message
+  // Anything else: keep the raw storage error out of the UI.
+  console.error('Avatar storage error:', message)
+  return 'Please try again.'
 }
 
 export default function ProfileForm({
@@ -141,9 +143,7 @@ export default function ProfileForm({
     if (updateError || !updated?.length) {
       setAvatarMessage({
         type: 'error',
-        text: `Your photo uploaded, but we couldn’t save it to your profile. ${
-          updateError?.message ?? 'Please try again.'
-        }`,
+        text: 'Your photo uploaded, but we couldn’t save it to your profile. Please try again.',
       })
     } else {
       setAvatarUrl(newAvatarUrl)
@@ -174,7 +174,8 @@ export default function ProfileForm({
       .select('id')
 
     if (error) {
-      setNamesMessage({ type: 'error', text: `We couldn’t save your name. ${error.message}` })
+      console.error('Name update failed:', error.message)
+      setNamesMessage({ type: 'error', text: 'We couldn’t save your name. Please try again.' })
     } else if (!updated?.length) {
       setNamesMessage({
         type: 'error',

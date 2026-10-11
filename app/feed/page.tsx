@@ -24,20 +24,20 @@ export default async function FeedPage() {
   for (const v of myVotes.votes) initialVotes[v.captionId] = v.vote
 
   return (
-    <main className="mx-auto w-full max-w-xl px-4 pt-8 pb-12 sm:pt-12">
+    <main id="main" className="mx-auto w-full max-w-xl px-4 pt-8 pb-12 sm:pt-12">
       <header className="mb-6">
         <h1 className="display text-4xl sm:text-5xl">
           Funny, <span className="mark">or not?</span>
         </h1>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
-          <p className="text-muted">AI writes the memes. You decide what lands.</p>
+          <p className="text-muted">AI writes it. You judge it.</p>
           {user ? (
             <Link href="/create" className="btn btn-zest">
               <SparkleIcon /> Make one
             </Link>
           ) : (
             <Link href="/login" className="inline-flex items-center gap-1 rounded font-semibold underline-offset-4 hover:underline">
-              Sign in to vote &amp; make <ArrowRightIcon className="h-3.5 w-3.5" />
+              Sign in to judge <ArrowRightIcon className="h-3.5 w-3.5" />
             </Link>
           )}
         </div>
@@ -46,7 +46,7 @@ export default async function FeedPage() {
       {error ? (
         <div role="alert" className="card flex flex-col items-center px-6 py-12 text-center">
           <p className="display text-xl">The feed didn’t load</p>
-          <p className="mt-1 max-w-sm text-sm text-muted">We couldn’t reach the database. Give it another go.</p>
+          <p className="mt-1 max-w-sm text-sm text-muted">Probably a hiccup on our end. Give it another go.</p>
           <Link href="/feed" className="btn btn-primary mt-5">
             Try again
           </Link>
@@ -57,7 +57,7 @@ export default async function FeedPage() {
             <ImageIcon className="h-7 w-7" />
           </span>
           <p className="display mt-4 text-xl">Nothing here yet</p>
-          <p className="mt-1 max-w-sm text-sm text-muted">The feed is empty right now. Give the AI a topic and get it started.</p>
+          <p className="mt-1 max-w-sm text-sm text-muted">Give the AI a topic and get things started.</p>
           <Link href={user ? '/create' : '/login'} className="btn btn-primary mt-5">
             <SparkleIcon /> Make the first one
           </Link>

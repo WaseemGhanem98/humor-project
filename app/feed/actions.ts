@@ -22,7 +22,7 @@ export async function submitVote(
 
   // Never trust the UI: re-check the session on the server before inserting.
   if (!user) {
-    return { ok: false, message: 'Please log in to vote.' }
+    return { ok: false, message: 'Your session ended. Sign in again to vote.' }
   }
 
   // Each vote is a brand-new row (no update/upsert).
@@ -35,15 +35,14 @@ export async function submitVote(
       return { ok: false, message: 'You’ve already voted on this one.' }
     }
     if (error.code === '42501') {
-      return {
-        ok: false,
-        message: 'Vote rejected by database permissions (row-level security).',
-      }
+      return { ok: false, message: 'That vote wasn’t allowed. Try signing out and back in.' }
     }
     if (error.code === '23503') {
       return { ok: false, message: 'That meme no longer exists.' }
     }
-    return { ok: false, message: `Could not save your vote: ${error.message}` }
+    // Details stay in the server log; never show raw database errors.
+    console.error('submitVote failed:', error.code, error.message)
+    return { ok: false, message: 'Couldn’t save that vote. Try again.' }
   }
 
   // Drop cached copies of pages that show your votes (e.g. the feed when you hit Back).
@@ -52,6 +51,6 @@ export async function submitVote(
 
   return {
     ok: true,
-    message: vote === 1 ? 'Saved: funny.' : 'Saved: not funny.',
+    message: vote === 1 ? 'Saved: Funny.' : 'Saved: Not funny.',
   }
 }

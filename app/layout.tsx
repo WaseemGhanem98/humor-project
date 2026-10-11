@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     default: "Wry — Funny, or not?",
     template: "%s · Wry",
   },
-  description: "Scroll memes, call them funny or not, and find out what actually lands.",
+  description: "AI writes the memes. You decide if they’re actually funny.",
 };
 
 export const viewport: Viewport = {
@@ -43,6 +43,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       {/* Bottom padding on mobile keeps content clear of the fixed tab bar. */}
       <body className="flex min-h-full flex-col pb-[calc(4.5rem+env(safe-area-inset-bottom))] sm:pb-0">
+        <a
+          href="#main"
+          className="sr-only z-50 rounded-full bg-foreground px-4 py-2 text-sm font-semibold text-background focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+        >
+          Skip to content
+        </a>
         <Nav />
         {children}
       </body>
