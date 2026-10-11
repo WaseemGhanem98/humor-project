@@ -26,6 +26,13 @@ test('surrounding quotes are removed and long captions are capped', () => {
   assert.equal(parseMemeOutput(out({ caption: 'z'.repeat(500) }), stock).caption.length, CAPTION_MAX)
 })
 
+test('quotes inside the joke are kept', () => {
+  const c = 'Everyone contributed a heartfelt “thanks.”'
+  assert.equal(parseMemeOutput(out({ caption: c }), stock).caption, c)
+  assert.equal(parseMemeOutput(out({ caption: 'He said "fine"' }), stock).caption, 'He said "fine"')
+  assert.equal(parseMemeOutput(out({ caption: '"Hi," she said, "no."' }), stock).caption, '"Hi," she said, "no."')
+})
+
 test('unknown image id falls back to a stock image that was not used recently', () => {
   for (let i = 0; i < 20; i++) {
     const r = parseMemeOutput(out({ image_id: 999 }), stock, [1, 2])

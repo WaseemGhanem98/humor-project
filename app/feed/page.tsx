@@ -23,20 +23,23 @@ export default async function FeedPage() {
   const initialVotes: Record<number, VoteValue> = {}
   for (const v of myVotes.votes) initialVotes[v.captionId] = v.vote
 
+  const aiCount = memes?.filter((m) => m.isAi).length ?? 0
+
   return (
-    <main id="main" className="mx-auto w-full max-w-xl px-4 pt-8 pb-12 sm:pt-12">
-      <header className="mb-6">
-        <h1 className="display text-4xl sm:text-5xl">
+    <main id="main" className="mx-auto w-full max-w-[38rem] px-4 pt-10 pb-16 sm:pt-14">
+      <header className="mb-8 border-b border-rule pb-6">
+        <p className="eyebrow">The feed · {aiCount} AI-written</p>
+        <h1 className="display mt-3 text-[3.4rem] leading-[0.95] sm:text-7xl">
           Funny, <span className="mark">or not?</span>
         </h1>
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
           <p className="text-muted">AI writes it. You judge it.</p>
           {user ? (
             <Link href="/create" className="btn btn-zest">
               <SparkleIcon /> Make one
             </Link>
           ) : (
-            <Link href="/login" className="inline-flex items-center gap-1 rounded font-semibold underline-offset-4 hover:underline">
+            <Link href="/login" className="link inline-flex items-center gap-1 text-sm font-semibold">
               Sign in to judge <ArrowRightIcon className="h-3.5 w-3.5" />
             </Link>
           )}
@@ -44,21 +47,19 @@ export default async function FeedPage() {
       </header>
 
       {error ? (
-        <div role="alert" className="card flex flex-col items-center px-6 py-12 text-center">
-          <p className="display text-xl">The feed didn’t load</p>
-          <p className="mt-1 max-w-sm text-sm text-muted">Probably a hiccup on our end. Give it another go.</p>
-          <Link href="/feed" className="btn btn-primary mt-5">
+        <div role="alert" className="plate px-6 py-12 text-center">
+          <p className="display text-3xl">The feed didn’t load.</p>
+          <p className="mt-2 text-sm text-muted">Probably a hiccup on our end. Give it another go.</p>
+          <Link href="/feed" className="btn btn-primary mt-6">
             Try again
           </Link>
         </div>
       ) : !memes?.length ? (
-        <div className="card flex flex-col items-center px-6 py-14 text-center">
-          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-zest text-zest-ink">
-            <ImageIcon className="h-7 w-7" />
-          </span>
-          <p className="display mt-4 text-xl">Nothing here yet</p>
-          <p className="mt-1 max-w-sm text-sm text-muted">Give the AI a topic and get things started.</p>
-          <Link href={user ? '/create' : '/login'} className="btn btn-primary mt-5">
+        <div className="plate px-6 py-14 text-center">
+          <ImageIcon className="mx-auto h-8 w-8 text-muted" />
+          <p className="display mt-4 text-3xl">Nothing here yet.</p>
+          <p className="mt-2 text-sm text-muted">Give the AI a topic and get things started.</p>
+          <Link href={user ? '/create' : '/login'} className="btn btn-primary mt-6">
             <SparkleIcon /> Make the first one
           </Link>
         </div>

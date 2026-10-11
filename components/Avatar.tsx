@@ -5,9 +5,9 @@ type Props = {
 }
 
 const SIZES = {
-  sm: 'h-8 w-8 text-xs',
-  md: 'h-14 w-14 text-lg',
-  lg: 'h-24 w-24 text-2xl',
+  sm: 'h-8 w-8 text-base',
+  md: 'h-16 w-16 text-3xl',
+  lg: 'h-24 w-24 text-5xl',
 }
 
 export default function Avatar({ url, name, size = 'sm' }: Props) {
@@ -20,7 +20,7 @@ export default function Avatar({ url, name, size = 'sm' }: Props) {
       <img
         src={url}
         alt={`${name}'s profile photo`}
-        className={`${SIZES[size]} shrink-0 rounded-full border border-border object-cover`}
+        className={`${SIZES[size]} shrink-0 border border-rule object-cover`}
       />
     )
   }
@@ -28,7 +28,7 @@ export default function Avatar({ url, name, size = 'sm' }: Props) {
   return (
     <div
       aria-hidden
-      className={`${SIZES[size]} flex shrink-0 items-center justify-center rounded-full bg-zest font-semibold text-zest-ink`}
+      className={`${SIZES[size]} flex shrink-0 items-center justify-center border border-rule bg-zest font-serif text-zest-ink italic`}
     >
       {initial}
     </div>

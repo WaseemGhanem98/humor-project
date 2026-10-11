@@ -10,6 +10,7 @@ import { verdictStats } from '@/lib/stats'
 import Avatar from '@/components/Avatar'
 import ProfileForm from '@/components/ProfileForm'
 import SignOutButton from '@/components/SignOutButton'
+import { plateNumber } from '@/components/MemeSource'
 import { ArrowRightIcon, ImageIcon, LaughIcon, MehIcon, SparkleIcon } from '@/components/icons'
 
 export const metadata: Metadata = { title: 'You' }
@@ -33,10 +34,10 @@ function Thumb({ meme }: { meme: Meme }) {
       alt=""
       loading="lazy"
       decoding="async"
-      className="h-14 w-[4.7rem] shrink-0 rounded-xl bg-surface-2 object-cover"
+      className="h-14 w-[4.7rem] shrink-0 border border-rule bg-surface-2 object-cover"
     />
   ) : (
-    <span className="flex h-14 w-[4.7rem] shrink-0 items-center justify-center rounded-xl bg-surface-2 text-muted">
+    <span className="flex h-14 w-[4.7rem] shrink-0 items-center justify-center border border-rule bg-surface-2 text-muted">
       <ImageIcon className="h-5 w-5" />
     </span>
   )
@@ -44,10 +45,10 @@ function Thumb({ meme }: { meme: Meme }) {
 
 function SectionHeader({ id, title, count, action }: { id: string; title: string; count?: number; action?: React.ReactNode }) {
   return (
-    <div className="flex items-end justify-between gap-4">
-      <h2 id={id} className="display text-2xl">
+    <div className="flex items-end justify-between gap-4 border-b border-rule pb-3">
+      <h2 id={id} className="display text-4xl leading-none">
         {title}
-        {count ? <span className="ml-2 text-lg text-muted tabular-nums">{count}</span> : null}
+        {count ? <span className="meta ml-3 align-middle text-muted tabular-nums">{String(count).padStart(2, '0')}</span> : null}
       </h2>
       {action}
     </div>
@@ -56,18 +57,18 @@ function SectionHeader({ id, title, count, action }: { id: string; title: string
 
 function Empty({ title, body, href, cta }: { title: string; body: string; href: string; cta: React.ReactNode }) {
   return (
-    <div className="mt-4 rounded-3xl border border-dashed border-border px-6 py-10 text-center">
-      <p className="display text-xl">{title}</p>
-      <p className="mt-1 text-sm text-muted">{body}</p>
-      <Link href={href} className="btn btn-primary mt-5">
+    <div className="border-b border-border py-10 text-center">
+      <p className="display text-3xl">{title}</p>
+      <p className="mt-2 text-sm text-muted">{body}</p>
+      <Link href={href} className="btn btn-primary mt-6">
         {cta}
       </Link>
     </div>
   )
 }
 
-const listClass = 'mt-4 divide-y divide-border overflow-hidden rounded-3xl border border-border bg-surface'
-const linkClass = 'inline-flex items-center gap-1 rounded text-sm font-semibold hover:underline'
+const listClass = 'divide-y divide-border border-b border-border'
+const linkClass = 'meta inline-flex items-center gap-1 rounded-[2px] hover:underline'
 
 export default async function ProfilePage() {
   const supabase = await createClient()
@@ -96,76 +97,76 @@ export default async function ProfilePage() {
   const displayName = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ').trim() || user.email || 'You'
 
   return (
-    <main id="main" className="mx-auto w-full max-w-2xl px-4 pt-8 pb-12 sm:pt-12">
-      <header className="flex items-center gap-4">
+    <main id="main" className="mx-auto w-full max-w-[44rem] px-4 pt-10 pb-16 sm:pt-14">
+      <header className="flex items-center gap-5 border-b border-rule pb-6">
         <Avatar url={profile?.avatar_url ?? null} name={displayName} size="md" />
         <div className="min-w-0">
-          <h1 className="display truncate text-3xl sm:text-4xl">{displayName}</h1>
-          <p className="truncate text-sm text-muted">{user.email}</p>
+          <p className="eyebrow">Your record</p>
+          <h1 className="display mt-1 truncate text-5xl leading-none sm:text-6xl">{displayName}</h1>
+          <p className="mt-1.5 truncate text-sm text-muted">{user.email}</p>
         </div>
       </header>
 
-      <section aria-labelledby="stats-heading" className="card mt-8 p-5 sm:p-6">
+      <section aria-labelledby="stats-heading" className="border-b border-rule py-8">
         <h2 id="stats-heading" className="eyebrow">
           Your sense of humor
         </h2>
 
         {rated === 0 ? (
-          <div className="mt-3">
-            <p className="display text-3xl">No verdicts yet.</p>
-            <p className="mt-1 text-sm text-muted">Judge a few memes and your numbers show up here.</p>
+          <div className="mt-4">
+            <p className="display text-6xl leading-none">No verdicts yet.</p>
+            <p className="mt-3 text-muted">Judge a few memes and your numbers show up here.</p>
           </div>
         ) : (
-          <>
-            <p className="mt-3 flex flex-wrap items-baseline gap-x-3">
-              <span className="display text-6xl leading-none tabular-nums">{funnyPct}%</span>
-              <span className="text-muted">of what you’ve judged landed</span>
+          <div className="mt-2 grid items-end gap-x-8 gap-y-4 sm:grid-cols-[auto_1fr]">
+            <p className="display text-[7.5rem] leading-[0.85] tracking-[-0.04em] tabular-nums sm:text-[9rem]">
+              {funnyPct}
+              <span className="text-[0.5em] italic">%</span>
             </p>
-            {/* Funny vs Not funny split, sized by your current verdicts. */}
-            <div aria-hidden className="mt-5 flex h-2.5 gap-1 overflow-hidden rounded-full">
-              {funny > 0 && <div className="rounded-full bg-zest" style={{ flexGrow: funny }} />}
-              {notFunny > 0 && <div className="rounded-full bg-foreground" style={{ flexGrow: notFunny }} />}
+            <div className="pb-3">
+              <p className="display text-2xl leading-tight italic">of what you’ve judged landed.</p>
+              {/* Funny vs Not funny split, sized by your current verdicts. */}
+              <div aria-hidden className="mt-4 flex h-3 border border-rule">
+                {funny > 0 && <div className="bg-zest" style={{ flexGrow: funny }} />}
+                {notFunny > 0 && <div className="bg-foreground" style={{ flexGrow: notFunny }} />}
+              </div>
             </div>
-          </>
+          </div>
         )}
 
-        <dl className="mt-5 grid grid-cols-3 divide-x divide-border border-t border-border pt-4 text-center">
-          <div className="px-2">
-            <dt className="text-xs font-medium text-muted">Judged</dt>
-            <dd className="display mt-1 text-2xl tabular-nums">{rated}</dd>
-          </div>
-          <div className="px-2">
-            <dt className="flex items-center justify-center gap-1.5 text-xs font-medium text-muted">
-              <span aria-hidden className="h-2 w-2 rounded-full bg-zest" /> Funny
-            </dt>
-            <dd className="display mt-1 text-2xl tabular-nums">{funny}</dd>
-          </div>
-          <div className="px-2">
-            <dt className="flex items-center justify-center gap-1.5 text-xs font-medium text-muted">
-              <span aria-hidden className="h-2 w-2 rounded-full bg-foreground" /> Not funny
-            </dt>
-            <dd className="display mt-1 text-2xl tabular-nums">{notFunny}</dd>
-          </div>
+        <dl className="mt-8 grid grid-cols-3 border-y border-rule">
+          {[
+            { label: 'Judged', value: rated, dot: null },
+            { label: 'Funny', value: funny, dot: 'bg-zest border border-rule' },
+            { label: 'Not funny', value: notFunny, dot: 'bg-foreground' },
+          ].map(({ label, value, dot }, i) => (
+            <div key={label} className={`px-3 py-4 sm:px-5 ${i > 0 ? 'border-l border-rule' : ''}`}>
+              <dt className="meta flex items-center gap-1.5 text-muted">
+                {dot && <span aria-hidden className={`h-2 w-2 ${dot}`} />}
+                {label}
+              </dt>
+              <dd className="display mt-1 text-5xl leading-none tabular-nums">{value}</dd>
+            </div>
+          ))}
         </dl>
 
         {total > 0 && (
-          <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-surface-2 px-4 py-3 text-sm">
-            <span className="tabular-nums">
-              <span className="font-semibold">{rated}</span>
-              <span className="text-muted"> of {total} in the feed</span>
+          <div className="mt-4 flex items-center justify-between gap-3">
+            <span className="meta tabular-nums text-muted">
+              {String(rated).padStart(2, '0')} of {String(total).padStart(2, '0')} in the feed
             </span>
             {remaining > 0 ? (
               <Link href="/feed" className={linkClass}>
                 {remaining} waiting <ArrowRightIcon className="h-3.5 w-3.5" />
               </Link>
             ) : (
-              <span className="font-semibold">All caught up</span>
+              <span className="meta">All caught up</span>
             )}
           </div>
         )}
       </section>
 
-      <section aria-labelledby="mine-heading" className="mt-10">
+      <section aria-labelledby="mine-heading" className="mt-14">
         <SectionHeader
           id="mine-heading"
           title="Your AI memes"
@@ -184,7 +185,7 @@ export default async function ProfilePage() {
           </p>
         ) : mine.memes.length === 0 ? (
           <Empty
-            title="Nothing yet"
+            title="Nothing yet."
             body="Give the AI a topic and see if it can make anyone laugh."
             href="/create"
             cta={
@@ -196,19 +197,20 @@ export default async function ProfilePage() {
         ) : (
           <ul className={listClass}>
             {mine.memes.map((meme) => (
-              <li key={meme.id} className="flex items-center gap-4 p-3 pr-4">
+              <li key={meme.id} className="flex items-center gap-4 py-3.5">
                 <Thumb meme={meme} />
                 <div className="min-w-0 flex-1">
-                  <p className="line-clamp-2 text-sm font-semibold">{meme.text}</p>
-                  {meme.prompt && <p className="mt-0.5 truncate text-xs text-muted">on “{meme.prompt}”</p>}
+                  <p className="display line-clamp-2 text-xl leading-snug">{meme.text}</p>
+                  {meme.prompt && <p className="mt-1 truncate text-xs text-muted">Prompt: “<bdi>{meme.prompt}</bdi>”</p>}
                 </div>
+                <span className="meta hidden shrink-0 text-muted sm:block">{plateNumber(meme.id)}</span>
               </li>
             ))}
           </ul>
         )}
       </section>
 
-      <section aria-labelledby="takes-heading" className="mt-10">
+      <section aria-labelledby="takes-heading" className="mt-14">
         <SectionHeader id="takes-heading" title="Your takes" count={history.length} />
         {votesError ? (
           <p role="alert" className="alert alert-error mt-4">
@@ -216,7 +218,7 @@ export default async function ProfilePage() {
           </p>
         ) : history.length === 0 ? (
           <Empty
-            title="No takes yet"
+            title="No takes yet."
             body="Every Funny and Not funny you call lands here."
             href="/feed"
             cta={
@@ -230,24 +232,20 @@ export default async function ProfilePage() {
             {history.map((v) => {
               const meme = memeById.get(v.captionId)!
               return (
-                <li key={v.captionId} className="flex items-center gap-4 p-3 pr-4">
+                <li key={v.captionId} className="flex items-center gap-4 py-3.5">
                   <Thumb meme={meme} />
                   <div className="min-w-0 flex-1">
-                    <p className="line-clamp-2 text-sm font-semibold">{meme.text}</p>
-                    <p className="mt-0.5 flex items-center gap-1.5 text-xs text-muted">
-                      {meme.isAi ? (
-                        <>
-                          <SparkleIcon className="h-3 w-3" /> AI-written
-                        </>
-                      ) : (
-                        'Original'
-                      )}
+                    <p className="display line-clamp-2 text-xl leading-snug">{meme.text}</p>
+                    <p className="meta mt-1 flex items-center gap-1.5 text-muted">
+                      {meme.isAi ? 'AI-written' : 'Original'}
                       <span aria-hidden>·</span>
                       {dateFormat.format(new Date(v.votedAt))}
                     </p>
                   </div>
                   <span
-                    className={`chip shrink-0 ${v.vote === 1 ? 'border-zest bg-zest text-zest-ink' : 'border-foreground bg-foreground text-background'}`}
+                    className={`meta inline-flex shrink-0 items-center gap-1.5 px-2 py-1 ${
+                      v.vote === 1 ? 'bg-zest text-zest-ink' : 'bg-foreground text-background'
+                    }`}
                   >
                     {v.vote === 1 ? <LaughIcon className="h-3.5 w-3.5" /> : <MehIcon className="h-3.5 w-3.5" />}
                     {v.vote === 1 ? 'Funny' : 'Not funny'}
@@ -259,10 +257,8 @@ export default async function ProfilePage() {
         )}
       </section>
 
-      <section id="account" aria-labelledby="account-heading" className="mt-12 scroll-mt-24">
-        <h2 id="account-heading" className="display text-2xl">
-          Account
-        </h2>
+      <section id="account" aria-labelledby="account-heading" className="mt-14 scroll-mt-24">
+        <SectionHeader id="account-heading" title="Account" />
 
         {(error || !profile) && (
           <p role="alert" className="alert alert-error mt-4">
@@ -270,7 +266,7 @@ export default async function ProfilePage() {
           </p>
         )}
 
-        <div className="mt-4">
+        <div className="mt-6">
           <ProfileForm
             userId={user.id}
             email={user.email ?? ''}

@@ -1,39 +1,49 @@
 @import "tailwindcss";
 
 /*
- * Wry design tokens.
- * Warm paper + ink, with one signature color ("zest" lime) reserved for brand
- * moments and the "Funny" verdict. Primary actions are ink, not color.
+ * Wry design system: an editorial humor tabloid.
+ * Warm newsprint + ink, hairline rules, square geometry, and one highlighter
+ * yellow reserved for emphasis and the "Funny" verdict. Type does the work:
+ * a high-contrast serif for headlines and jokes, mono caps for metadata.
  */
 :root {
-  --background: #f5f3ee;
-  --foreground: #121211;
-  --surface: #ffffff;
-  --surface-2: #ece9e2;
-  --border: #e2ded5;
-  --muted: #67635b;
-  --accent: #121211;
-  --accent-hover: #2d2c29;
-  --accent-foreground: #ffffff;
-  --zest: #d4f53c;
-  --zest-ink: #121211;
-  --focus: #121211;
+  --background: #f1ede4;
+  --foreground: #16140f;
+  --surface: #f9f7f2;
+  --surface-2: #e7e1d4;
+  --border: #d6cebe;
+  --rule: #16140f;
+  --muted: #6a6356;
+  --accent: #16140f;
+  --accent-hover: #34302a;
+  --accent-foreground: #f9f7f2;
+  --zest: #ffdf3d;
+  --zest-ink: #16140f;
+  --focus: #16140f;
+  --danger: #b4321f;
+  /* Highlighter: a yellow stroke on paper; on ink it becomes yellow type instead. */
+  --mark-bg: linear-gradient(transparent 58%, var(--zest) 58%, var(--zest) 92%, transparent 92%);
+  --mark-color: currentColor;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0d0d0c;
-    --foreground: #f3f1eb;
-    --surface: #171716;
-    --surface-2: #21201e;
-    --border: #2c2b28;
-    --muted: #a19c92;
-    --accent: #d4f53c;
-    --accent-hover: #e2fa75;
-    --accent-foreground: #121211;
-    --zest: #d4f53c;
-    --zest-ink: #121211;
-    --focus: #d4f53c;
+    --background: #0f0e0c;
+    --foreground: #f1ede4;
+    --surface: #171512;
+    --surface-2: #221f1a;
+    --border: #322d26;
+    --rule: #f1ede4;
+    --muted: #a49c8d;
+    --accent: #f1ede4;
+    --accent-hover: #ffffff;
+    --accent-foreground: #0f0e0c;
+    --zest: #ffdf3d;
+    --zest-ink: #16140f;
+    --focus: #ffdf3d;
+    --danger: #ff7a63;
+    --mark-bg: none;
+    --mark-color: var(--zest);
   }
 }
 
@@ -43,15 +53,17 @@
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-border: var(--border);
+  --color-rule: var(--rule);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-foreground: var(--accent-foreground);
   --color-zest: var(--zest);
   --color-zest-ink: var(--zest-ink);
+  --color-danger: var(--danger);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-bricolage);
+  --font-serif: var(--font-instrument-serif);
 }
 
 body {
@@ -64,7 +76,7 @@ body {
   /* Visible keyboard focus everywhere; mouse clicks don't show the ring. */
   :focus-visible {
     outline: 2px solid var(--focus);
-    outline-offset: 2px;
+    outline-offset: 3px;
   }
 
   ::selection {
@@ -74,45 +86,51 @@ body {
 }
 
 @layer components {
+  /* Headline serif. Weight comes from size and contrast, not boldness. */
   .display {
-    @apply font-display font-extrabold tracking-[-0.03em];
+    @apply font-serif font-normal tracking-[-0.015em];
   }
 
-  .card {
-    @apply rounded-3xl border border-border bg-surface p-6;
-  }
-
-  .card-interactive {
-    @apply transition hover:-translate-y-0.5 hover:shadow-md motion-reduce:transform-none;
-  }
-
-  .meme-card {
-    @apply shadow-[0_1px_2px_rgb(0_0_0/0.04)] transition-shadow duration-200 hover:shadow-[0_8px_30px_rgb(0_0_0/0.07)];
+  /* Mono caps: issue numbers, labels, metadata. */
+  .meta {
+    @apply font-mono text-[0.68rem] font-medium tracking-[0.14em] uppercase;
   }
 
   .eyebrow {
-    @apply text-xs font-semibold tracking-[0.12em] text-muted uppercase;
+    @apply font-mono text-[0.68rem] font-medium tracking-[0.14em] text-muted uppercase;
   }
 
-  /* Highlighter-pen emphasis for one word in a headline. */
+  /* Highlighter stroke behind a word, like it was marked up by hand. */
   .mark {
-    @apply rounded-[0.2em] bg-zest px-[0.12em] text-zest-ink [box-decoration-break:clone];
+    @apply italic [box-decoration-break:clone];
+    background: var(--mark-bg);
+    color: var(--mark-color);
+    padding: 0 0.06em;
+  }
+
+  .card {
+    @apply border border-border bg-surface p-6;
+  }
+
+  /* A meme, framed like a printed plate. */
+  .plate {
+    @apply border border-rule bg-surface;
   }
 
   .chip {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-1 text-xs font-medium;
+    @apply inline-flex items-center gap-1.5 border border-border px-2 py-1 font-mono text-[0.68rem] font-medium tracking-[0.08em] uppercase;
   }
 
   .skeleton {
-    @apply animate-pulse rounded-md bg-foreground/[0.07] motion-reduce:animate-none;
+    @apply animate-pulse bg-foreground/[0.07] motion-reduce:animate-none;
   }
 
   .btn {
-    @apply inline-flex min-h-10 touch-manipulation items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold whitespace-nowrap transition duration-150 select-none active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-45 disabled:active:scale-100 motion-reduce:transform-none;
+    @apply inline-flex min-h-11 touch-manipulation items-center justify-center gap-2 rounded-[3px] px-4 py-2 text-sm font-semibold whitespace-nowrap transition duration-150 select-none active:translate-y-px disabled:cursor-not-allowed disabled:opacity-40 disabled:active:translate-y-0 motion-reduce:transform-none;
   }
 
   .btn-lg {
-    @apply min-h-12 px-6 text-base;
+    @apply min-h-13 px-6 text-[0.95rem];
   }
 
   .btn-primary {
@@ -120,24 +138,23 @@ body {
   }
 
   .btn-secondary {
-    @apply border border-border bg-surface hover:border-foreground/25 hover:bg-surface-2;
+    @apply border border-rule hover:bg-foreground hover:text-background;
   }
 
   .btn-ghost {
-    @apply text-muted hover:bg-foreground/5 hover:text-foreground;
+    @apply text-muted hover:text-foreground;
   }
 
   .btn-zest {
-    @apply bg-zest text-zest-ink hover:brightness-95;
+    @apply bg-zest text-zest-ink hover:brightness-[0.97];
   }
 
-  /* Verdict buttons on each meme: big, equal-width tap targets. */
-  .btn-vote {
-    @apply min-h-13 flex-1 rounded-2xl border border-border bg-surface text-[0.95rem];
+  .link {
+    @apply rounded-[2px] underline decoration-1 underline-offset-[0.22em] transition-[text-decoration-thickness] hover:decoration-2;
   }
 
   .input {
-    @apply w-full rounded-xl border border-border bg-surface px-3.5 py-2.5 text-sm outline-none transition focus:border-foreground/40 focus:ring-4 focus:ring-foreground/5;
+    @apply w-full rounded-[3px] border border-border bg-surface px-3.5 py-2.5 text-sm outline-none transition focus:border-rule;
   }
 
   .label {
@@ -149,31 +166,31 @@ body {
   }
 
   .alert {
-    @apply rounded-2xl border px-4 py-3 text-sm;
+    @apply border-l-2 px-4 py-3 text-sm;
   }
 
   .alert-error {
-    @apply border-red-300 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950/50 dark:text-red-200;
+    @apply border-danger bg-danger/[0.07] text-foreground;
   }
 
   .alert-success {
-    @apply border-green-300 bg-green-50 text-green-800 dark:border-green-900 dark:bg-green-950/50 dark:text-green-200;
+    @apply border-rule bg-zest/30 text-foreground;
   }
 
   .alert-warning {
-    @apply border-amber-300 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950/50 dark:text-amber-200;
+    @apply border-zest bg-zest/20 text-foreground;
   }
 
   .alert-info {
-    @apply border-border bg-surface-2 text-foreground;
+    @apply border-rule bg-surface-2 text-foreground;
   }
 }
 
-/* Motion: short, springy, and off for people who ask for reduced motion. */
+/* Motion: short, deliberate, and off for people who ask for reduced motion. */
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(14px) scale(0.98);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -181,12 +198,12 @@ body {
   }
 }
 
-@keyframes pop {
+@keyframes stamp {
   0% {
     transform: scale(1);
   }
-  45% {
-    transform: scale(1.045);
+  40% {
+    transform: scale(0.96);
   }
   100% {
     transform: scale(1);
@@ -202,23 +219,48 @@ body {
   }
 }
 
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+
 @layer utilities {
   .animate-rise {
-    animation: rise 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation: rise 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
   }
 
   .animate-pop {
-    animation: pop 0.32s cubic-bezier(0.3, 1.4, 0.5, 1);
+    animation: stamp 0.28s cubic-bezier(0.3, 1.4, 0.5, 1);
   }
 
   .animate-fade {
     animation: fade 0.4s ease-out both;
   }
 
+  .animate-ticker {
+    animation: ticker 70s linear infinite;
+  }
+
+  .animate-caret {
+    animation: caret 1s steps(1) infinite;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .animate-rise,
     .animate-pop,
-    .animate-fade {
+    .animate-fade,
+    .animate-ticker,
+    .animate-caret {
       animation: none;
     }
   }

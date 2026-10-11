@@ -6,7 +6,8 @@ import { submitVote, type VoteValue } from '@/app/feed/actions'
 import type { Meme } from '@/lib/memes'
 import MemeImage from '@/components/MemeImage'
 import Spinner from '@/components/Spinner'
-import { AlertIcon, ExternalLinkIcon, LaughIcon, MehIcon, SparkleIcon } from '@/components/icons'
+import { MemeSource, plateNumber } from '@/components/MemeSource'
+import { AlertIcon, ExternalLinkIcon, LaughIcon, MehIcon } from '@/components/icons'
 
 type Props = {
   meme: Meme
@@ -18,28 +19,9 @@ type Props = {
 }
 
 const VERDICTS: { value: VoteValue; label: string; Icon: typeof LaughIcon; selected: string }[] = [
-  { value: 1, label: 'Funny', Icon: LaughIcon, selected: 'border-zest bg-zest text-zest-ink' },
-  { value: -1, label: 'Not funny', Icon: MehIcon, selected: 'border-foreground bg-foreground text-background' },
+  { value: 1, label: 'Funny', Icon: LaughIcon, selected: 'bg-zest text-zest-ink' },
+  { value: -1, label: 'Not funny', Icon: MehIcon, selected: 'bg-foreground text-background' },
 ]
-
-export function MemeSource({ meme }: { meme: Meme }) {
-  return meme.isAi ? (
-    <p className="flex min-w-0 items-center gap-2 text-xs text-muted">
-      <span className="chip shrink-0 border-transparent bg-zest py-0.5 font-semibold text-zest-ink">
-        <SparkleIcon className="h-3.5 w-3.5" /> AI-written
-      </span>
-      {meme.prompt && (
-        <span className="truncate">
-          <span className="sr-only">Topic: </span>on “{meme.prompt}”
-        </span>
-      )}
-    </p>
-  ) : (
-    <p className="text-xs">
-      <span className="chip py-0.5 font-semibold text-muted">Original</span>
-    </p>
-  )
-}
 
 export default function MemeCard({ meme, signedIn, currentVote, onVoted, priority = false, className = '' }: Props) {
   const [, startTransition] = useTransition()
@@ -77,77 +59,77 @@ export default function MemeCard({ meme, signedIn, currentVote, onVoted, priorit
   }
 
   return (
-    <li className={`card meme-card overflow-hidden p-0 ${className}`} aria-labelledby={headingId}>
+    <li className={`plate ${className}`} aria-labelledby={headingId}>
       <figure>
-        <div className="px-5 pt-4 sm:px-6">
+        <div className="flex items-center justify-between gap-3 border-b border-rule px-4 py-2.5">
+          <span className="meta text-muted">{plateNumber(meme.id)}</span>
           <MemeSource meme={meme} />
         </div>
-        <figcaption
-          id={headingId}
-          className="px-5 pt-2.5 pb-4 font-display text-[1.375rem] leading-[1.2] font-bold tracking-[-0.02em] text-pretty sm:px-6 sm:text-2xl"
-        >
-          {meme.text}
-        </figcaption>
         <MemeImage src={meme.imageUrl} alt={meme.imageAlt} caption={meme.text} priority={priority} />
+        <div className="border-t border-rule px-5 pt-5 pb-6 sm:px-7 sm:pt-6 sm:pb-7">
+          <figcaption id={headingId} className="display text-[1.85rem] leading-[1.08] text-pretty sm:text-[2.35rem]">
+            {meme.text}
+          </figcaption>
+          {meme.isAi && meme.prompt && (
+            <p className="mt-3 truncate text-sm text-muted">
+              <span className="sr-only">Topic: </span>
+              <span aria-hidden className="meta mr-2">Prompt</span>“<bdi>{meme.prompt}</bdi>”
+            </p>
+          )}
+        </div>
       </figure>
 
-      <div className="p-3 sm:p-4">
-        <div role="group" aria-label="Your verdict" className="flex gap-2">
-          {VERDICTS.map(({ value, label, Icon, selected }) => {
-            const isPending = pendingVote === value
-            const isSelected = currentVote === value && !saving
-            const content = (
-              <>
-                {isPending ? <Spinner className="h-5 w-5" /> : <Icon className="h-5 w-5" />}
-                {label}
-              </>
-            )
-            return signedIn ? (
-              <button
-                key={value}
-                type="button"
-                onClick={() => vote(value)}
-                disabled={saving}
-                aria-pressed={isSelected}
-                aria-busy={isPending}
-                className={`btn btn-vote ${
-                  isSelected ? `${selected} ${justVoted ? 'animate-pop' : ''}` : 'hover:border-foreground/30 hover:bg-surface-2'
-                }`}
-              >
-                {content}
-              </button>
-            ) : (
-              <Link key={value} href="/login" className="btn btn-vote hover:border-foreground/30 hover:bg-surface-2">
-                {content}
-              </Link>
-            )
-          })}
-        </div>
+      <div role="group" aria-label="Your verdict" className="grid grid-cols-2 border-t border-rule">
+        {VERDICTS.map(({ value, label, Icon, selected }, i) => {
+          const isPending = pendingVote === value
+          const isSelected = currentVote === value && !saving
+          const cls = `flex h-14 touch-manipulation items-center justify-center gap-2 text-[0.95rem] font-semibold transition-colors select-none sm:h-16 ${
+            i === 0 ? 'border-r border-rule' : ''
+          }`
+          const content = (
+            <>
+              {isPending ? <Spinner className="h-5 w-5" /> : <Icon className="h-5 w-5" />}
+              {label}
+            </>
+          )
+          return signedIn ? (
+            <button
+              key={value}
+              type="button"
+              onClick={() => vote(value)}
+              disabled={saving}
+              aria-pressed={isSelected}
+              aria-busy={isPending}
+              className={`${cls} disabled:cursor-wait ${isSelected ? `${selected} ${justVoted ? 'animate-pop' : ''}` : 'hover:bg-surface-2'}`}
+            >
+              {content}
+            </button>
+          ) : (
+            <Link key={value} href="/login" className={`${cls} hover:bg-surface-2`}>
+              {content}
+            </Link>
+          )
+        })}
+      </div>
 
-        {/* Success is visible on the buttons themselves; it's only announced for screen readers. */}
-        <div aria-live="polite">
-          {status &&
-            (status.ok ? (
-              <span className="sr-only">{status.message}</span>
-            ) : (
-              <p role="alert" className="mt-2.5 flex items-start gap-1.5 px-1 text-[0.8rem] text-red-700 dark:text-red-400">
-                <AlertIcon className="mt-0.5 h-4 w-4 shrink-0" />
-                {status.message}
-              </p>
-            ))}
-        </div>
+      {/* Success shows on the verdict bar itself; it's only announced for screen readers. */}
+      <div aria-live="polite">
+        {status &&
+          (status.ok ? (
+            <span className="sr-only">{status.message}</span>
+          ) : (
+            <p role="alert" className="flex items-start gap-1.5 border-t border-rule bg-danger/[0.07] px-4 py-2.5 text-[0.8rem]">
+              <AlertIcon className="mt-0.5 h-4 w-4 shrink-0 text-danger" />
+              {status.message}
+            </p>
+          ))}
       </div>
 
       {meme.imageCredit && (
-        <p className="border-t border-border px-5 py-2.5 text-[0.7rem] leading-relaxed text-muted sm:px-6">
+        <p className="border-t border-border px-4 py-2 text-[0.68rem] leading-relaxed text-muted">
           Photo:{' '}
           {meme.imageSourceUrl ? (
-            <a
-              href={meme.imageSourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded underline-offset-2 hover:text-foreground hover:underline"
-            >
+            <a href={meme.imageSourceUrl} target="_blank" rel="noopener noreferrer" className="rounded-[2px] hover:text-foreground hover:underline">
               {meme.imageCredit}
               <ExternalLinkIcon className="ml-1 inline-block h-3 w-3 align-[-0.125em]" />
               <span className="sr-only">(opens in a new tab)</span>

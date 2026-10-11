@@ -209,7 +209,7 @@ export default function ProfileForm({
           <div className="relative">
             <Avatar url={previewUrl ?? avatarUrl} name={displayName} size="lg" />
             {previewUrl && (
-              <span className="absolute -right-1 -bottom-1 rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold text-accent-foreground">
+              <span className="meta absolute -right-1 -bottom-1 bg-accent px-1.5 py-0.5 text-[0.6rem] text-accent-foreground">
                 Preview
               </span>
             )}

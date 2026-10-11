@@ -35,7 +35,9 @@ export function parseMemeOutput<T extends StockLike>(text: string, stock: T[], r
   if (refused === true) throw new MemeError('The AI passed on that one. Try a different topic.')
   if (typeof caption !== 'string') throw new Error('Model returned no caption.')
 
-  const text_ = cleanText(caption.replace(/^["“'‘]+|["”'’]+$/g, ''), CAPTION_MAX)
+  // Strip quotes only when they wrap the whole caption; a quote inside the joke stays.
+  const unwrapped = caption.trim().replace(/^["“]([^"“”]*)["”]$/, '$1')
+  const text_ = cleanText(unwrapped, CAPTION_MAX)
   if (text_.length < 3) throw new Error('Model returned an empty caption.')
 
   const fresh = stock.filter((s) => !recentIds.includes(s.id))

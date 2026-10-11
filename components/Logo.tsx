@@ -1,19 +1,21 @@
-// Wry brand mark: a lopsided smile ("the smirk") on a zest tile, plus a lowercase wordmark.
+// Wry brand: an italic serif wordmark with a highlighter-yellow full stop.
 export function LogoMark({ className = 'h-7 w-7' }: { className?: string }) {
   return (
     <svg viewBox="0 0 32 32" aria-hidden className={className}>
-      <rect width="32" height="32" rx="9" fill="var(--zest)" />
-      <path d="M8.5 18.5c3.6 4.2 10 4.6 15.5-3.5" fill="none" stroke="var(--zest-ink)" strokeWidth="3.2" strokeLinecap="round" />
-      <circle cx="24.6" cy="11.6" r="1.9" fill="var(--zest-ink)" />
+      <rect width="32" height="32" fill="var(--foreground)" />
+      <rect x="3" y="20" width="26" height="6" fill="var(--zest)" />
+      <text x="16" y="24" textAnchor="middle" fontSize="22" fontStyle="italic" fill="var(--background)" className="font-serif">
+        W
+      </text>
     </svg>
   )
 }
 
 export default function Logo({ size = 'md' }: { size?: 'md' | 'lg' }) {
   return (
-    <span className="inline-flex items-center gap-2">
-      <LogoMark className={size === 'lg' ? 'h-10 w-10' : 'h-7 w-7'} />
-      <span className={`display leading-none ${size === 'lg' ? 'text-4xl' : 'text-2xl'}`}>wry</span>
+    <span className={`display inline-flex items-baseline leading-none italic ${size === 'lg' ? 'text-5xl' : 'text-[1.85rem]'}`}>
+      Wry
+      <span aria-hidden className={`ml-[0.06em] inline-block bg-zest ${size === 'lg' ? 'h-2.5 w-2.5' : 'h-[0.42rem] w-[0.42rem]'}`} />
     </span>
   )
 }

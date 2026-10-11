@@ -18,7 +18,7 @@ export function DesktopLinks({ signedIn }: { signedIn: boolean }) {
   ]
 
   return (
-    <ul className="hidden items-center gap-1 sm:flex">
+    <ul className="hidden items-center gap-6 sm:flex">
       {links.map(({ href, label }) => {
         const active = isActive(pathname, href)
         return (
@@ -26,8 +26,8 @@ export function DesktopLinks({ signedIn }: { signedIn: boolean }) {
             <Link
               href={href}
               aria-current={active ? 'page' : undefined}
-              className={`block rounded-full px-3.5 py-1.5 text-sm font-semibold transition-colors ${
-                active ? 'bg-foreground text-background' : 'text-muted hover:bg-foreground/5 hover:text-foreground'
+              className={`meta relative block py-2 transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-[2px] after:bg-foreground after:transition-transform ${
+                active ? 'text-foreground after:scale-x-100' : 'text-muted after:scale-x-0 hover:text-foreground'
               }`}
             >
               {label}
@@ -57,7 +57,7 @@ export function TabBar({ signedIn }: { signedIn: boolean }) {
   return (
     <nav
       aria-label="Tabs"
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-md sm:hidden"
+      className="fixed inset-x-0 bottom-0 z-30 border-t border-rule bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md sm:hidden"
     >
       <ul className="flex">
         {tabs.map(({ href, label, Icon }) => {
@@ -67,18 +67,13 @@ export function TabBar({ signedIn }: { signedIn: boolean }) {
               <Link
                 href={href}
                 aria-current={active ? 'page' : undefined}
-                className={`flex h-[4.5rem] flex-col items-center justify-center gap-1 text-[0.7rem] font-semibold transition-colors ${
+                className={`relative flex h-16 flex-col items-center justify-center gap-1.5 transition-colors ${
                   active ? 'text-foreground' : 'text-muted'
                 }`}
               >
-                <span
-                  className={`flex h-8 w-14 items-center justify-center rounded-full transition-colors ${
-                    active ? 'bg-zest text-zest-ink' : ''
-                  }`}
-                >
-                  <Icon className="h-5 w-5" />
-                </span>
-                {label}
+                {active && <span aria-hidden className="absolute inset-x-6 top-0 h-[3px] bg-zest" />}
+                <Icon className="h-5 w-5" />
+                <span className="meta text-[0.62rem]">{label}</span>
               </Link>
             </li>
           )
@@ -95,12 +90,12 @@ export function ProfileLink({ name, avatarUrl }: { name: string; avatarUrl: stri
       href="/profile"
       aria-current={active ? 'page' : undefined}
       aria-label="Your profile"
-      className={`flex items-center gap-2 rounded-full p-1 text-sm font-semibold transition-colors sm:pr-3 ${
-        active ? 'bg-foreground/5 ring-1 ring-border' : 'text-muted hover:bg-foreground/5 hover:text-foreground'
+      className={`flex items-center gap-2.5 rounded-[3px] p-1 text-sm font-medium transition-colors sm:pr-2 ${
+        active ? 'text-foreground' : 'text-muted hover:text-foreground'
       }`}
     >
       <Avatar url={avatarUrl} name={name} />
-      <span className="hidden max-w-[10rem] truncate sm:inline">{name}</span>
+      <span className={`hidden max-w-[10rem] truncate sm:inline ${active ? 'underline decoration-2 underline-offset-4' : ''}`}>{name}</span>
     </Link>
   )
 }

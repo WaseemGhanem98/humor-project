@@ -36,9 +36,9 @@ export default function MemeImage({ src, alt, caption, priority = false }: Props
           }`}
         />
       ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-accent/10 via-transparent to-accent/5 text-muted">
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-surface-2 text-muted">
           <ImageIcon className="h-8 w-8 opacity-60" />
-          <p className="text-sm font-medium">
+          <p className="meta">
             {src ? 'Image unavailable' : 'No image yet'}
           </p>
         </div>

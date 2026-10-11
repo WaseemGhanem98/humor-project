@@ -25,37 +25,33 @@ export default async function LoginPage({
   const tiles = (memes ?? []).filter((m) => m.imageUrl).slice(0, 4)
 
   return (
-    <main id="main" className="mx-auto grid w-full max-w-5xl flex-1 gap-8 px-4 py-10 sm:py-16 lg:grid-cols-2 lg:items-center">
-      <section
-        aria-hidden
-        className="hidden overflow-hidden rounded-[2rem] bg-foreground p-8 text-background lg:block"
-      >
-        <p className="display text-4xl leading-tight">
+    <main id="main" className="mx-auto grid w-full max-w-6xl flex-1 gap-10 px-4 py-10 sm:px-6 sm:py-16 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-16">
+      <section aria-hidden className="hidden border border-rule bg-foreground p-8 text-background lg:block">
+        <p className="meta text-background/60">The AI humor review</p>
+        <p className="display mt-4 text-6xl leading-[0.9]">
           Two buttons.
           <br />
-          Strong opinions.
+          <span className="italic">Strong opinions.</span>
         </p>
-        <div className="mt-8 grid grid-cols-2 gap-3">
-          {tiles.map((meme, i) => (
+        <div className="mt-8 grid grid-cols-2 gap-px border border-background/20 bg-background/20">
+          {tiles.map((meme) => (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={meme.id}
-              src={meme.imageUrl!}
-              alt=""
-              className={`aspect-[4/3] w-full rounded-2xl object-cover ${i % 2 ? 'translate-y-4' : ''}`}
-            />
+            <img key={meme.id} src={meme.imageUrl!} alt="" className="aspect-[4/3] w-full object-cover" />
           ))}
         </div>
       </section>
 
       <div className="mx-auto w-full max-w-sm">
         <LogoMark className="h-12 w-12" />
-        <h1 className="display mt-6 text-4xl">Sign in to play</h1>
-        <p className="mt-2 text-muted">Judge AI memes, make your own, keep score.</p>
+        <p className="eyebrow mt-8">Members only, free forever</p>
+        <h1 className="display mt-2 text-6xl leading-[0.9]">
+          Sign in <span className="mark">to play.</span>
+        </h1>
+        <p className="mt-4 text-muted">Judge AI memes, make your own, keep score.</p>
 
         {typeof error === 'string' && (
           <div role="alert" className="alert alert-error mt-6 flex items-start gap-2">
-            <AlertIcon className="mt-0.5 h-4 w-4 shrink-0" />
+            <AlertIcon className="mt-0.5 h-4 w-4 shrink-0 text-danger" />
             {/* The raw reason stays out of the UI: the query string is user-controllable. */}
             <div>
               <p className="font-semibold">Sign-in didn’t work</p>
@@ -69,9 +65,9 @@ export default async function LoginPage({
         </div>
         <p className="mt-3 text-xs text-muted">You’ll hop over to Google, then straight back.</p>
 
-        <p className="mt-10 border-t border-border pt-6 text-sm text-muted">
+        <p className="mt-10 border-t border-rule pt-5 text-sm text-muted">
           Just looking?{' '}
-          <Link href="/feed" className="rounded font-semibold text-foreground underline-offset-4 hover:underline">
+          <Link href="/feed" className="link font-semibold text-foreground">
             Browse the feed
           </Link>
         </p>
