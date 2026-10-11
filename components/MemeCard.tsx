@@ -6,7 +6,7 @@ import { submitVote, type VoteValue } from '@/app/feed/actions'
 import type { Meme } from '@/lib/memes'
 import MemeImage from '@/components/MemeImage'
 import Spinner from '@/components/Spinner'
-import { AlertIcon, CheckIcon, ExternalLinkIcon, LaughIcon, MehIcon } from '@/components/icons'
+import { AlertIcon, CheckIcon, ExternalLinkIcon, LaughIcon, MehIcon, SparkleIcon } from '@/components/icons'
 
 type Props = {
   meme: Meme
@@ -58,9 +58,21 @@ export default function MemeCard({ meme, signedIn, currentVote, onVoted, priorit
   return (
     <li className="card meme-card overflow-hidden p-0" aria-labelledby={headingId}>
       <figure>
+        {meme.isAi && (
+          <p className="flex min-w-0 items-center gap-1.5 px-5 pt-4 text-xs font-medium text-muted sm:px-6">
+            <span className="chip shrink-0 border-zest bg-zest py-0.5 font-semibold text-zest-ink">
+              <SparkleIcon className="h-3.5 w-3.5" /> AI-written
+            </span>
+            {meme.prompt && (
+              <span className="truncate">
+                <span className="sr-only">Topic: </span>“{meme.prompt}”
+              </span>
+            )}
+          </p>
+        )}
         <figcaption
           id={headingId}
-          className="px-5 pt-5 pb-4 font-display text-[1.375rem] leading-[1.2] font-bold tracking-[-0.02em] text-pretty sm:px-6 sm:text-2xl"
+          className={`px-5 pb-4 font-display ${meme.isAi ? 'pt-2.5' : 'pt-5'} text-[1.375rem] leading-[1.2] font-bold tracking-[-0.02em] text-pretty sm:px-6 sm:text-2xl`}
         >
           {meme.text}
         </figcaption>

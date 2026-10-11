@@ -7,9 +7,9 @@ import Logo from '@/components/Logo'
 import { ArrowRightIcon, LaughIcon, MehIcon } from '@/components/icons'
 
 const STEPS = [
-  { title: 'Scroll', body: 'A feed of memes, one at a time.' },
-  { title: 'Call it', body: 'Funny or not funny. One tap.' },
-  { title: 'Keep score', body: 'Every verdict is saved to your profile.' },
+  { title: 'Prompt it', body: 'Give the AI a topic. It writes the caption and picks the photo.' },
+  { title: 'Call it', body: 'Funny or not funny. One tap, on every AI meme in the feed.' },
+  { title: 'Keep score', body: 'Your verdicts and stats live on your profile.' },
 ]
 
 export default async function Home() {
@@ -36,7 +36,7 @@ export default async function Home() {
             What’s actually <span className="mark">funny?</span>
           </h1>
           <p className="mt-6 max-w-md text-lg text-muted text-pretty">
-            Scroll a feed of memes and give each one a verdict. Two buttons. No essays.
+            AI writes the memes. You decide if they actually land. Two buttons. No essays.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/feed" className="btn btn-primary btn-lg">
@@ -46,7 +46,7 @@ export default async function Home() {
               Sign in
             </Link>
           </div>
-          <p className="mt-4 text-sm text-muted">Free. Browse without an account; sign in with Google to vote.</p>
+          <p className="mt-4 text-sm text-muted">Free. Browse without an account; sign in with Google to vote and make your own.</p>
         </div>
 
         {front && (
@@ -123,7 +123,7 @@ export default async function Home() {
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
           <Logo />
-          <p>Meme images via Wikimedia Commons, credited on each post.</p>
+          <p>AI-written memes are labelled. Images via Wikimedia Commons, credited on each post.</p>
         </div>
       </footer>
     </main>

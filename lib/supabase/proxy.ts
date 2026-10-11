@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-const PROTECTED_PATHS = ['/dashboard', '/profile']
+const PROTECTED_PATHS = ['/dashboard', '/profile', '/create']
 
 // Refreshes the Supabase auth session cookie on every request and
 // redirects signed-out users away from protected pages.

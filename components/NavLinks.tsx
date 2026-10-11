@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import Avatar from '@/components/Avatar'
-import { FeedIcon, HomeIcon, LogInIcon, UserIcon } from '@/components/icons'
+import { FeedIcon, HomeIcon, LogInIcon, SparkleIcon, UserIcon } from '@/components/icons'
 
 function isActive(pathname: string, href: string) {
   return href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`)
@@ -14,6 +14,7 @@ export function DesktopLinks({ signedIn }: { signedIn: boolean }) {
   const links = [
     ...(signedIn ? [] : [{ href: '/', label: 'Home' }]),
     { href: '/feed', label: 'Feed' },
+    ...(signedIn ? [{ href: '/create', label: 'Make' }] : []),
   ]
 
   return (
@@ -44,6 +45,7 @@ export function TabBar({ signedIn }: { signedIn: boolean }) {
   const tabs = signedIn
     ? [
         { href: '/feed', label: 'Feed', Icon: FeedIcon },
+        { href: '/create', label: 'Make', Icon: SparkleIcon },
         { href: '/profile', label: 'You', Icon: UserIcon },
       ]
     : [

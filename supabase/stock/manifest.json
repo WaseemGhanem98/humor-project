@@ -1,0 +1,254 @@
+[
+  {
+    "slug": "group-project-atlas",
+    "file": "group-project-atlas.jpg",
+    "alt": "The marble Farnese Atlas statue straining to hold an enormous globe on his shoulders.",
+    "description": "Ancient statue of a man straining under a huge globe on his back: carrying everything alone, overloaded, burden.",
+    "tags": [
+      "burden",
+      "overworked",
+      "responsibility",
+      "stress"
+    ],
+    "credit": "Farnese Atlas by Carlo Raso · Public domain",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Farnese_Atlas.jpg"
+  },
+  {
+    "slug": "understood-assignment-bulldog",
+    "file": "understood-assignment-bulldog.jpg",
+    "alt": "A bulldog wearing glasses and headphones sits seriously in front of a 1920s radio set.",
+    "description": "Bulldog in glasses and headphones at an old radio looking very serious: pretending to be an expert, focused, studying.",
+    "tags": [
+      "focus",
+      "expert",
+      "serious",
+      "studying"
+    ],
+    "credit": "The Wireless Age, Nov. 1922 · Public domain",
+    "source_url": "https://commons.wikimedia.org/wiki/File:English_bulldog_wearing_headphones_and_glasses,_listening_to_the_radio.jpg"
+  },
+  {
+    "slug": "first-computer-bug",
+    "file": "first-computer-bug.jpg",
+    "alt": "A 1947 logbook page with a moth taped to it, captioned \"First actual case of bug being found.\"",
+    "description": "Old logbook page with a real moth taped in as the first computer bug: bugs, tech, documentation, nerdy.",
+    "tags": [
+      "bugs",
+      "tech",
+      "work",
+      "nerdy"
+    ],
+    "credit": "U.S. Naval History and Heritage Command · Public domain",
+    "source_url": "https://commons.wikimedia.org/wiki/File:First_Computer_Bug,_1947.jpg"
+  },
+  {
+    "slug": "works-on-my-machine-cat",
+    "file": "works-on-my-machine-cat.jpg",
+    "alt": "A fluffy calico cat lying on a laptop keyboard, staring smugly at the camera.",
+    "description": "Smug cat lying across a laptop keyboard: blocking work, laziness, smugness, working from home.",
+    "tags": [
+      "smug",
+      "laptop",
+      "procrastination",
+      "wfh"
+    ],
+    "credit": "Breawycker · CC BY-SA 4.0 (cropped)",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Cat_lying_on_keyboard.jpg"
+  },
+  {
+    "slug": "friday-deploy-dumpster-fire",
+    "file": "friday-deploy-dumpster-fire.jpg",
+    "alt": "A dumpster engulfed in huge flames at night.",
+    "description": "Dumpster on fire at night: total disaster, chaos, everything going wrong.",
+    "tags": [
+      "disaster",
+      "chaos",
+      "fire",
+      "failure"
+    ],
+    "credit": "Ben Watts · CC BY 2.0 (cropped)",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Dumpster_Fire_(4088047046).jpg"
+  },
+  {
+    "slug": "raccoon-trash",
+    "file": "raccoon-trash.jpg",
+    "alt": "A raccoon peeking out of a black garbage bag inside a metal trash can.",
+    "description": "Raccoon peeking out of a trash can: caught red-handed, scavenging, snacks, living in chaos.",
+    "tags": [
+      "caught",
+      "snacks",
+      "sneaky",
+      "mess"
+    ],
+    "credit": "Raccoon in a garbage can by Rhododendrites · CC BY-SA 4.0 (cropped)",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Raccoon_in_a_garbage_can_in_Prospect_Park_(72564).jpg"
+  },
+  {
+    "slug": "surprised-cat",
+    "file": "surprised-cat.jpg",
+    "alt": "A calico cat lying on a patterned rug, staring wide-eyed at the camera.",
+    "description": "Cat on a rug staring wide-eyed and startled: shock, disbelief, being caught off guard.",
+    "tags": [
+      "shock",
+      "surprise",
+      "disbelief",
+      "startled"
+    ],
+    "credit": "Surprised Cat by Matthew Paul Argall · CC BY 3.0 (cropped)",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Surprised_Cat_2.JPG"
+  },
+  {
+    "slug": "thinking-monkey",
+    "file": "thinking-monkey.jpg",
+    "alt": "A small monkey sitting on a wooden railing in the forest, gazing off thoughtfully.",
+    "description": "Monkey sitting alone on a railing staring into the distance: overthinking, contemplating life, waiting.",
+    "tags": [
+      "thinking",
+      "overthinking",
+      "waiting",
+      "alone"
+    ],
+    "credit": "Thinking monkey by Charles R. Benedict · CC BY-SA 4.0 (cropped)",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Thinking_monkey.jpg"
+  },
+  {
+    "slug": "barn-owl-stare",
+    "file": "barn-owl-stare.jpg",
+    "alt": "A barn owl turning its pale heart-shaped face to stare directly at the camera.",
+    "description": "Barn owl giving an intense side-eye stare: judging you, suspicion, silent disapproval.",
+    "tags": [
+      "judging",
+      "side-eye",
+      "suspicious",
+      "disapproval"
+    ],
+    "credit": "Staring Down A Barn Owl by joiseyshowaa · CC BY-SA 2.0 (cropped)",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Staring_Down_A_Barn_Owl.jpg"
+  },
+  {
+    "slug": "penguin-commute",
+    "file": "penguin-commute.jpg",
+    "alt": "A line of king penguins waddling across the snow in single file.",
+    "description": "Group of penguins walking in a line: commuting, Monday mornings, following the crowd, office life.",
+    "tags": [
+      "commute",
+      "monday",
+      "crowd",
+      "routine"
+    ],
+    "credit": "King Penguins by Pseudopanax at English Wikipedia · Public domain",
+    "source_url": "https://commons.wikimedia.org/wiki/File:King_Penguins_walking_along_at_Kelly_Tarlton%27s.jpg"
+  },
+  {
+    "slug": "sleeping-dog-painting",
+    "file": "sleeping-dog-painting.jpg",
+    "alt": "A 17th-century oil painting of a small white dog curled up asleep beside a clay pot and a basket.",
+    "description": "Old painting of a dog curled up fast asleep: exhaustion, naps, weekends, giving up for the day.",
+    "tags": [
+      "tired",
+      "nap",
+      "weekend",
+      "sleep"
+    ],
+    "credit": "Sleeping Dog (1650) by Gerrit Dou · Public domain",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Gerrit_Dou_(Dutch,_1613%E2%80%931675),_Sleeping_Dog,_1650._Oil_on_panel.jpg"
+  },
+  {
+    "slug": "llama-closeup",
+    "file": "llama-closeup.jpg",
+    "alt": "Close-up of a shaggy white-and-grey llama with half-closed eyes and a slight smirk.",
+    "description": "Llama with half-closed eyes and a smug little smile: unbothered, sassy, unimpressed.",
+    "tags": [
+      "smug",
+      "unbothered",
+      "sassy",
+      "unimpressed"
+    ],
+    "credit": "Llama face closeup by Gavin Schaefer (Uxud) · CC BY-SA 3.0 (cropped)",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Llama_face_closeup.jpg"
+  },
+  {
+    "slug": "sloth-hanging",
+    "file": "sloth-hanging.jpg",
+    "alt": "A three-toed sloth hugging a tree trunk and smiling with its eyes closed.",
+    "description": "Smiling sloth hugging a tree with eyes closed: blissfully slow, lazy, zero urgency, peaceful.",
+    "tags": [
+      "slow",
+      "lazy",
+      "chill",
+      "procrastination"
+    ],
+    "credit": "Bradypus by Stefan Laube (Tauchgurke) · Public domain",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Bradypus.jpg"
+  },
+  {
+    "slug": "typing-pool",
+    "file": "typing-pool.jpg",
+    "alt": "A black-and-white 1920s photo of a crowded office full of people working at typewriters.",
+    "description": "Old black-and-white office packed with people at typewriters: busy work, deadlines, emails, corporate grind.",
+    "tags": [
+      "office",
+      "work",
+      "deadline",
+      "corporate"
+    ],
+    "credit": "Office with typewriters by National Photo Company Collection · Public domain",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Office_with_women_and_typewriters_LCCN2016824361.tif"
+  },
+  {
+    "slug": "goat-on-roof",
+    "file": "goat-on-roof.jpg",
+    "alt": "A goat-shaped weather vane on top of a brick building against a bright blue sky.",
+    "description": "Goat weather vane standing proudly on a rooftop: being on top of the world, overconfidence, standing out.",
+    "tags": [
+      "proud",
+      "winning",
+      "confidence",
+      "weird"
+    ],
+    "credit": "Goat on the roof by Tim Green from Bradford · CC BY 2.0 (cropped)",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Goat_on_the_roof_(2053292754).jpg"
+  },
+  {
+    "slug": "meerkat-lookout",
+    "file": "meerkat-lookout.jpg",
+    "alt": "A meerkat standing upright on red sand, alert and on lookout.",
+    "description": "Meerkat standing upright on alert in the desert: waiting for news, paranoia, watching for the boss.",
+    "tags": [
+      "alert",
+      "waiting",
+      "watching",
+      "paranoid"
+    ],
+    "credit": "Meerkat in the Kalahari by Giles Laurent · CC BY-SA 4.0 (cropped)",
+    "source_url": "https://commons.wikimedia.org/wiki/File:112_Meerkat_standing_in_the_Kalahari_Desert_of_Namibia_Photo_by_Giles_Laurent.jpg"
+  },
+  {
+    "slug": "smiling-seal",
+    "file": "smiling-seal.jpg",
+    "alt": "A seal’s head poking out of calm blue-grey water, looking at the camera.",
+    "description": "Seal peeking its head out of the water: awkwardly checking in, lurking, coming back after a long time.",
+    "tags": [
+      "peeking",
+      "awkward",
+      "lurking",
+      "returning"
+    ],
+    "credit": "Smiling harbor seal by Giles Laurent · CC BY-SA 4.0 (cropped)",
+    "source_url": "https://commons.wikimedia.org/wiki/File:021_Wild_smiling_harbor_seal_at_J%C3%B6kuls%C3%A1rl%C3%B3n_(Iceland)_Photo_by_Giles_Laurent.jpg"
+  },
+  {
+    "slug": "hamster-cheeks",
+    "file": "hamster-cheeks.jpg",
+    "alt": "A plump hamster in the grass stuffing its cheek pouches with dandelion leaves.",
+    "description": "Hamster stuffing its cheeks with leaves: overeating, snacks, hoarding, greedy.",
+    "tags": [
+      "food",
+      "snacks",
+      "hoarding",
+      "greedy"
+    ],
+    "credit": "Syrian hamster by Peter Maas / Miss-Sophie · CC BY-SA 2.5 (cropped)",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Syrian_hamster_filling_his_cheek_pouches_with_Dandelion_leaves_cropped.jpg"
+  }
+]

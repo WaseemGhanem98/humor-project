@@ -2,9 +2,10 @@
 export default function Loading() {
   return (
     <main className="mx-auto w-full max-w-xl px-4 pt-8 pb-12 sm:pt-12" aria-busy="true">
-      <h1 className="display mb-6 text-4xl sm:text-5xl">
+      <h1 className="display mb-3 text-4xl sm:text-5xl">
         Funny, <span className="mark">or not?</span>
       </h1>
+      <div className="skeleton mb-6 h-6 w-2/3" />
       <p className="sr-only" role="status">
         Loading memes…
       </p>

@@ -5,7 +5,7 @@ import { fetchMemes } from '@/lib/memes'
 import { fetchMyVotes } from '@/lib/votes'
 import type { VoteValue } from '@/app/feed/actions'
 import Feed from '@/components/Feed'
-import { ArrowRightIcon, ImageIcon } from '@/components/icons'
+import { ArrowRightIcon, ImageIcon, SparkleIcon } from '@/components/icons'
 
 export const metadata: Metadata = { title: 'Feed' }
 
@@ -29,14 +29,18 @@ export default async function FeedPage() {
         <h1 className="display text-4xl sm:text-5xl">
           Funny, <span className="mark">or not?</span>
         </h1>
-        {!user && (
-          <p className="mt-3 flex flex-wrap items-center gap-x-2 text-muted">
-            Browse freely.
-            <Link href="/login" className="inline-flex items-center gap-1 rounded font-semibold text-foreground underline-offset-4 hover:underline">
-              Sign in to vote <ArrowRightIcon className="h-3.5 w-3.5" />
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+          <p className="text-muted">AI writes the memes. You decide what lands.</p>
+          {user ? (
+            <Link href="/create" className="btn btn-zest">
+              <SparkleIcon /> Make one
             </Link>
-          </p>
-        )}
+          ) : (
+            <Link href="/login" className="inline-flex items-center gap-1 rounded font-semibold underline-offset-4 hover:underline">
+              Sign in to vote &amp; make <ArrowRightIcon className="h-3.5 w-3.5" />
+            </Link>
+          )}
+        </div>
       </header>
 
       {error ? (
@@ -53,9 +57,9 @@ export default async function FeedPage() {
             <ImageIcon className="h-7 w-7" />
           </span>
           <p className="display mt-4 text-xl">Nothing here yet</p>
-          <p className="mt-1 max-w-sm text-sm text-muted">The feed is empty right now. Check back soon.</p>
-          <Link href="/" className="btn btn-secondary mt-5">
-            Back home
+          <p className="mt-1 max-w-sm text-sm text-muted">The feed is empty right now. Give the AI a topic and get it started.</p>
+          <Link href={user ? '/create' : '/login'} className="btn btn-primary mt-5">
+            <SparkleIcon /> Make the first one
           </Link>
         </div>
       ) : (

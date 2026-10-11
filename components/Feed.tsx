@@ -5,7 +5,7 @@ import { useState } from 'react'
 import type { VoteValue } from '@/app/feed/actions'
 import type { Meme } from '@/lib/memes'
 import MemeCard from '@/components/MemeCard'
-import { ArrowRightIcon, CheckIcon } from '@/components/icons'
+import { ArrowRightIcon, CheckIcon, SparkleIcon } from '@/components/icons'
 
 type Props = {
   memes: Meme[]
@@ -71,16 +71,21 @@ export default function Feed({ memes, signedIn, initialVotes }: Props) {
             </span>
             <p className="display mt-4 text-xl">{allRated ? 'You’re all caught up.' : 'That’s the whole feed.'}</p>
             <p className="mt-1 text-sm text-muted">
-              {allRated ? 'New memes land here first.' : `${memes.length - rated} still waiting on your verdict.`}
+              {allRated ? 'New AI memes land here every day. Or make one now.' : `${memes.length - rated} still waiting on your verdict.`}
             </p>
-            <Link href="/profile" className="btn btn-secondary mt-5">
-              See your takes
-            </Link>
+            <div className="mt-5 flex flex-wrap justify-center gap-3">
+              <Link href="/create" className="btn btn-primary">
+                <SparkleIcon /> Make one
+              </Link>
+              <Link href="/profile" className="btn btn-secondary">
+                See your takes
+              </Link>
+            </div>
           </>
         ) : (
           <>
             <p className="display text-xl">Got opinions?</p>
-            <p className="mt-1 text-sm text-muted">Sign in to call each one funny or not.</p>
+            <p className="mt-1 text-sm text-muted">Sign in to call each one funny or not, and prompt the AI yourself.</p>
             <Link href="/login" className="btn btn-primary mt-5">
               Sign in to vote <ArrowRightIcon />
             </Link>

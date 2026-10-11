@@ -50,8 +50,8 @@ export default async function LoginPage({
 
       <div className="mx-auto w-full max-w-sm">
         <LogoMark className="h-12 w-12" />
-        <h1 className="display mt-6 text-4xl">Sign in to vote</h1>
-        <p className="mt-2 text-muted">Save your verdicts and keep track of your takes.</p>
+        <h1 className="display mt-6 text-4xl">Sign in to play</h1>
+        <p className="mt-2 text-muted">Vote on AI memes, prompt your own, and keep track of your takes.</p>
 
         {typeof error === 'string' && (
           <div role="alert" className="alert alert-error mt-6 flex items-start gap-2">
